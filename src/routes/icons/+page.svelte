@@ -276,7 +276,7 @@
 				</button>
 			</div>
 			{#if pngMenuOpen}
-				<div class="absolute right-0 top-full mt-1 py-1 bg-zinc-800 border border-zinc-700 rounded-md shadow-xl z-50 min-w-[120px]">
+				<div class="absolute right-0 top-full mt-1 py-1 bg-zinc-800 border border-zinc-700 rounded-md shadow-xl z-50 whitespace-nowrap">
 					<button
 						onclick={handleDownloadPng}
 						class="w-full px-3 py-1.5 text-left text-xs text-zinc-300 hover:bg-zinc-700 transition-colors"

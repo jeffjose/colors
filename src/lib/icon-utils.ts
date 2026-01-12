@@ -45,8 +45,8 @@ export function getSvgAttributes(svg: string): Record<string, string> {
 }
 
 /**
- * Apply solid color to SVG by modifying fill attributes
- * Replaces currentColor and existing fills with the new color
+ * Apply solid color to SVG by modifying fill and stroke attributes
+ * Replaces all color values with the new color
  */
 export function applySolidColor(svg: string, color: string): string {
 	let result = svg;
@@ -57,12 +57,24 @@ export function applySolidColor(svg: string, color: string): string {
 	// Replace stroke="currentColor" with the new color
 	result = result.replace(/stroke=["']currentColor["']/gi, `stroke="${color}"`);
 
-	// If there's no fill attribute on paths/shapes, we need to set color via style or fill
-	// Check if SVG has any fill attributes
-	const hasFill = /fill=["'][^"']*["']/i.test(result);
+	// Replace existing hex fill colors (but not "none")
+	result = result.replace(/fill=["']#[0-9a-fA-F]{3,8}["']/gi, `fill="${color}"`);
 
-	if (!hasFill) {
-		// Add fill to the SVG element itself
+	// Replace existing hex stroke colors (but not "none")
+	result = result.replace(/stroke=["']#[0-9a-fA-F]{3,8}["']/gi, `stroke="${color}"`);
+
+	// Replace rgb/rgba fills
+	result = result.replace(/fill=["']rgba?\([^)]+\)["']/gi, `fill="${color}"`);
+
+	// Replace rgb/rgba strokes
+	result = result.replace(/stroke=["']rgba?\([^)]+\)["']/gi, `stroke="${color}"`);
+
+	// Check if SVG has any visible fill (not "none")
+	const hasVisibleFill = /fill=["'](?!none)[^"']+["']/i.test(result);
+	const hasVisibleStroke = /stroke=["'](?!none)[^"']+["']/i.test(result);
+
+	// If no visible fill or stroke, add fill to the SVG element
+	if (!hasVisibleFill && !hasVisibleStroke) {
 		result = result.replace(/<svg([^>]*)>/i, `<svg$1 fill="${color}">`);
 	}
 
