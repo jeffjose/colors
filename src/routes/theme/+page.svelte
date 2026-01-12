@@ -122,10 +122,10 @@
 		>
 			{#if slides[selectedSlideIndex].id === 'title'}
 				<!-- Title Slide -->
-				<div class="w-full h-full flex flex-col items-center justify-center p-12">
+				<div class="w-full h-full flex flex-col items-center justify-center p-8">
 					<button
 						onclick={() => handleColorClick(theme.text, 'Title Text')}
-						class="text-4xl font-bold mb-4 hover:ring-2 hover:ring-blue-500 hover:ring-offset-4 rounded px-2 py-1 transition-all cursor-pointer"
+						class="text-3xl font-bold mb-3 hover:ring-2 hover:ring-blue-500 hover:ring-offset-4 rounded px-2 py-1 transition-all cursor-pointer"
 						style="color: {theme.text}; --tw-ring-offset-color: {theme.background}"
 					>
 						Presentation Title
@@ -141,10 +141,10 @@
 
 			{:else if slides[selectedSlideIndex].id === 'content'}
 				<!-- Content Slide -->
-				<div class="w-full h-full flex flex-col p-12">
+				<div class="w-full h-full flex flex-col p-8">
 					<button
 						onclick={() => handleColorClick(theme.text, 'Heading')}
-						class="text-3xl font-bold mb-8 hover:ring-2 hover:ring-blue-500 hover:ring-offset-4 rounded px-2 py-1 transition-all cursor-pointer self-start"
+						class="text-2xl font-bold mb-4 hover:ring-2 hover:ring-blue-500 hover:ring-offset-4 rounded px-2 py-1 transition-all cursor-pointer self-start"
 						style="color: {theme.text}; --tw-ring-offset-color: {theme.background}"
 					>
 						Content Heading
@@ -176,15 +176,15 @@
 
 			{:else if slides[selectedSlideIndex].id === 'neon-boxes'}
 				<!-- Neon Boxes - Border + tinted background + colored text -->
-				<div class="w-full h-full flex flex-col p-12">
+				<div class="w-full h-full flex flex-col p-8">
 					<button
 						onclick={() => handleColorClick(theme.text, 'Heading')}
-						class="text-3xl font-bold mb-8 hover:ring-2 hover:ring-blue-500 hover:ring-offset-4 rounded px-2 py-1 transition-all cursor-pointer self-start"
+						class="text-2xl font-bold mb-4 hover:ring-2 hover:ring-blue-500 hover:ring-offset-4 rounded px-2 py-1 transition-all cursor-pointer self-start"
 						style="color: {theme.text}; --tw-ring-offset-color: {theme.background}"
 					>
 						Neon Style Boxes
 					</button>
-					<div class="flex-1 grid grid-cols-3 gap-6">
+					<div class="flex-1 grid grid-cols-3 gap-4">
 						<!-- Blue neon -->
 						<button
 							onclick={() => handleColorClick(theme.accent, 'Accent (border + text)')}
@@ -217,15 +217,15 @@
 
 			{:else if slides[selectedSlideIndex].id === 'outlined'}
 				<!-- Outlined Style - Just borders, no fills -->
-				<div class="w-full h-full flex flex-col p-12">
+				<div class="w-full h-full flex flex-col p-8">
 					<button
 						onclick={() => handleColorClick(theme.text, 'Heading')}
-						class="text-3xl font-bold mb-8 hover:ring-2 hover:ring-blue-500 hover:ring-offset-4 rounded px-2 py-1 transition-all cursor-pointer self-start"
+						class="text-2xl font-bold mb-4 hover:ring-2 hover:ring-blue-500 hover:ring-offset-4 rounded px-2 py-1 transition-all cursor-pointer self-start"
 						style="color: {theme.text}; --tw-ring-offset-color: {theme.background}"
 					>
 						Outlined Cards
 					</button>
-					<div class="flex-1 grid grid-cols-3 gap-6">
+					<div class="flex-1 grid grid-cols-3 gap-4">
 						<button
 							onclick={() => handleColorClick(theme.border, 'Border color')}
 							class="rounded-xl p-6 border hover:ring-2 hover:ring-blue-500 transition-all cursor-pointer flex flex-col text-left"
@@ -270,10 +270,10 @@
 
 			{:else if slides[selectedSlideIndex].id === 'icons-grid'}
 				<!-- Icons Grid - Showcase of icon styles -->
-				<div class="w-full h-full flex flex-col p-12">
+				<div class="w-full h-full flex flex-col p-8">
 					<button
 						onclick={() => handleColorClick(theme.text, 'Heading')}
-						class="text-3xl font-bold mb-8 hover:ring-2 hover:ring-blue-500 hover:ring-offset-4 rounded px-2 py-1 transition-all cursor-pointer self-start"
+						class="text-2xl font-bold mb-4 hover:ring-2 hover:ring-blue-500 hover:ring-offset-4 rounded px-2 py-1 transition-all cursor-pointer self-start"
 						style="color: {theme.text}; --tw-ring-offset-color: {theme.background}"
 					>
 						Icon Styles
@@ -356,18 +356,18 @@
 
 			{:else if slides[selectedSlideIndex].id === 'icon-cards'}
 				<!-- Icon Cards - Cards with prominent icons -->
-				<div class="w-full h-full flex flex-col p-12">
+				<div class="w-full h-full flex flex-col p-8">
 					<button
 						onclick={() => handleColorClick(theme.text, 'Heading')}
-						class="text-3xl font-bold mb-8 hover:ring-2 hover:ring-blue-500 hover:ring-offset-4 rounded px-2 py-1 transition-all cursor-pointer self-start"
+						class="text-2xl font-bold mb-4 hover:ring-2 hover:ring-blue-500 hover:ring-offset-4 rounded px-2 py-1 transition-all cursor-pointer self-start"
 						style="color: {theme.text}; --tw-ring-offset-color: {theme.background}"
 					>
 						Feature Cards with Icons
 					</button>
-					<div class="flex-1 grid grid-cols-2 gap-6">
+					<div class="flex-1 grid grid-cols-2 gap-4">
 						<button
 							onclick={() => handleColorClick(theme.surface, 'Card surface')}
-							class="rounded-2xl p-8 hover:ring-2 hover:ring-blue-500 transition-all cursor-pointer flex gap-6 text-left"
+							class="rounded-2xl p-5 hover:ring-2 hover:ring-blue-500 transition-all cursor-pointer flex gap-4 text-left"
 							style="background-color: {theme.surface}"
 						>
 							<div class="w-16 h-16 rounded-2xl shrink-0 flex items-center justify-center" style="background: linear-gradient(135deg, {theme.accent}, {theme.secondary})">
@@ -382,7 +382,7 @@
 						</button>
 						<button
 							onclick={() => handleColorClick(theme.surface, 'Card surface')}
-							class="rounded-2xl p-8 hover:ring-2 hover:ring-blue-500 transition-all cursor-pointer flex gap-6 text-left"
+							class="rounded-2xl p-5 hover:ring-2 hover:ring-blue-500 transition-all cursor-pointer flex gap-4 text-left"
 							style="background-color: {theme.surface}"
 						>
 							<div class="w-16 h-16 rounded-2xl shrink-0 flex items-center justify-center" style="background: linear-gradient(135deg, {theme.secondary}, {theme.tertiary})">
@@ -397,7 +397,7 @@
 						</button>
 						<button
 							onclick={() => handleColorClick(theme.accent, 'Accent border card')}
-							class="rounded-2xl p-8 border-2 hover:ring-2 hover:ring-blue-500 transition-all cursor-pointer flex gap-6 text-left"
+							class="rounded-2xl p-5 border-2 hover:ring-2 hover:ring-blue-500 transition-all cursor-pointer flex gap-4 text-left"
 							style="border-color: {theme.accent}; background-color: {hexToRgba(theme.accent, 0.05)}"
 						>
 							<div class="w-16 h-16 rounded-2xl shrink-0 flex items-center justify-center border-2" style="border-color: {theme.accent}">
@@ -412,7 +412,7 @@
 						</button>
 						<button
 							onclick={() => handleColorClick(theme.tertiary, 'Tertiary border card')}
-							class="rounded-2xl p-8 border-2 hover:ring-2 hover:ring-blue-500 transition-all cursor-pointer flex gap-6 text-left"
+							class="rounded-2xl p-5 border-2 hover:ring-2 hover:ring-blue-500 transition-all cursor-pointer flex gap-4 text-left"
 							style="border-color: {theme.tertiary}; background-color: {hexToRgba(theme.tertiary, 0.05)}"
 						>
 							<div class="w-16 h-16 rounded-2xl shrink-0 flex items-center justify-center border-2" style="border-color: {theme.tertiary}">
@@ -430,15 +430,15 @@
 
 			{:else if slides[selectedSlideIndex].id === 'gradient-cards'}
 				<!-- Gradient Cards -->
-				<div class="w-full h-full flex flex-col p-12">
+				<div class="w-full h-full flex flex-col p-8">
 					<button
 						onclick={() => handleColorClick(theme.text, 'Heading')}
-						class="text-3xl font-bold mb-8 hover:ring-2 hover:ring-blue-500 hover:ring-offset-4 rounded px-2 py-1 transition-all cursor-pointer self-start"
+						class="text-2xl font-bold mb-4 hover:ring-2 hover:ring-blue-500 hover:ring-offset-4 rounded px-2 py-1 transition-all cursor-pointer self-start"
 						style="color: {theme.text}; --tw-ring-offset-color: {theme.background}"
 					>
 						Gradient Backgrounds
 					</button>
-					<div class="flex-1 grid grid-cols-3 gap-6">
+					<div class="flex-1 grid grid-cols-3 gap-4">
 						<button
 							onclick={() => handleColorClick(theme.accent, 'Blue-Purple gradient')}
 							class="rounded-2xl p-6 hover:ring-2 hover:ring-white/30 transition-all cursor-pointer flex flex-col justify-end"
@@ -468,15 +468,15 @@
 
 			{:else if slides[selectedSlideIndex].id === 'pills-badges'}
 				<!-- Pills & Badges -->
-				<div class="w-full h-full flex flex-col p-12">
+				<div class="w-full h-full flex flex-col p-8">
 					<button
 						onclick={() => handleColorClick(theme.text, 'Heading')}
-						class="text-3xl font-bold mb-8 hover:ring-2 hover:ring-blue-500 hover:ring-offset-4 rounded px-2 py-1 transition-all cursor-pointer self-start"
+						class="text-2xl font-bold mb-4 hover:ring-2 hover:ring-blue-500 hover:ring-offset-4 rounded px-2 py-1 transition-all cursor-pointer self-start"
 						style="color: {theme.text}; --tw-ring-offset-color: {theme.background}"
 					>
 						Pills & Badges
 					</button>
-					<div class="flex-1 flex flex-col gap-8">
+					<div class="flex-1 flex flex-col gap-5">
 						<!-- Row 1: Solid pills -->
 						<div>
 							<div class="text-sm mb-3" style="color: {theme.muted}">Solid Pills</div>
@@ -523,10 +523,10 @@
 
 			{:else if slides[selectedSlideIndex].id === 'flow'}
 				<!-- Flow Diagram - Neon style -->
-				<div class="w-full h-full flex flex-col p-12">
+				<div class="w-full h-full flex flex-col p-8">
 					<button
 						onclick={() => handleColorClick(theme.text, 'Heading')}
-						class="text-3xl font-bold mb-8 hover:ring-2 hover:ring-blue-500 hover:ring-offset-4 rounded px-2 py-1 transition-all cursor-pointer self-start"
+						class="text-2xl font-bold mb-4 hover:ring-2 hover:ring-blue-500 hover:ring-offset-4 rounded px-2 py-1 transition-all cursor-pointer self-start"
 						style="color: {theme.text}; --tw-ring-offset-color: {theme.background}"
 					>
 						Process Flow
@@ -582,21 +582,21 @@
 
 			{:else if slides[selectedSlideIndex].id === 'stats'}
 				<!-- Stats & Numbers -->
-				<div class="w-full h-full flex flex-col p-12">
+				<div class="w-full h-full flex flex-col p-8">
 					<button
 						onclick={() => handleColorClick(theme.text, 'Heading')}
-						class="text-3xl font-bold mb-8 hover:ring-2 hover:ring-blue-500 hover:ring-offset-4 rounded px-2 py-1 transition-all cursor-pointer self-start"
+						class="text-2xl font-bold mb-4 hover:ring-2 hover:ring-blue-500 hover:ring-offset-4 rounded px-2 py-1 transition-all cursor-pointer self-start"
 						style="color: {theme.text}; --tw-ring-offset-color: {theme.background}"
 					>
 						Key Metrics
 					</button>
-					<div class="flex-1 grid grid-cols-4 gap-6">
+					<div class="flex-1 grid grid-cols-4 gap-4">
 						<button
 							onclick={() => handleColorClick(theme.accent, 'Stat card accent')}
 							class="rounded-2xl p-6 hover:ring-2 hover:ring-white/30 transition-all cursor-pointer flex flex-col items-center justify-center text-center"
 							style="background-color: {hexToRgba(theme.accent, 0.1)}; border: 1px solid {hexToRgba(theme.accent, 0.3)}"
 						>
-							<div class="text-4xl font-bold mb-1" style="color: {theme.accent}">99%</div>
+							<div class="text-3xl font-bold mb-1" style="color: {theme.accent}">99%</div>
 							<div class="text-sm" style="color: {theme.muted}">Uptime</div>
 						</button>
 						<button
@@ -604,7 +604,7 @@
 							class="rounded-2xl p-6 hover:ring-2 hover:ring-white/30 transition-all cursor-pointer flex flex-col items-center justify-center text-center"
 							style="background-color: {hexToRgba(theme.secondary, 0.1)}; border: 1px solid {hexToRgba(theme.secondary, 0.3)}"
 						>
-							<div class="text-4xl font-bold mb-1" style="color: {theme.secondary}">50K+</div>
+							<div class="text-3xl font-bold mb-1" style="color: {theme.secondary}">50K+</div>
 							<div class="text-sm" style="color: {theme.muted}">Users</div>
 						</button>
 						<button
@@ -612,7 +612,7 @@
 							class="rounded-2xl p-6 hover:ring-2 hover:ring-white/30 transition-all cursor-pointer flex flex-col items-center justify-center text-center"
 							style="background-color: {hexToRgba(theme.tertiary, 0.1)}; border: 1px solid {hexToRgba(theme.tertiary, 0.3)}"
 						>
-							<div class="text-4xl font-bold mb-1" style="color: {theme.tertiary}">4.9</div>
+							<div class="text-3xl font-bold mb-1" style="color: {theme.tertiary}">4.9</div>
 							<div class="text-sm" style="color: {theme.muted}">Rating</div>
 						</button>
 						<button
@@ -620,7 +620,7 @@
 							class="rounded-2xl p-6 hover:ring-2 hover:ring-blue-500 transition-all cursor-pointer flex flex-col items-center justify-center text-center"
 							style="background-color: {theme.surface}"
 						>
-							<div class="text-4xl font-bold mb-1" style="color: {theme.text}">24/7</div>
+							<div class="text-3xl font-bold mb-1" style="color: {theme.text}">24/7</div>
 							<div class="text-sm" style="color: {theme.muted}">Support</div>
 						</button>
 					</div>
@@ -628,15 +628,15 @@
 
 			{:else if slides[selectedSlideIndex].id === 'buttons'}
 				<!-- Buttons - Various button styles -->
-				<div class="w-full h-full flex flex-col p-12">
+				<div class="w-full h-full flex flex-col p-8">
 					<button
 						onclick={() => handleColorClick(theme.text, 'Heading')}
-						class="text-3xl font-bold mb-8 hover:ring-2 hover:ring-blue-500 hover:ring-offset-4 rounded px-2 py-1 transition-all cursor-pointer self-start"
+						class="text-2xl font-bold mb-4 hover:ring-2 hover:ring-blue-500 hover:ring-offset-4 rounded px-2 py-1 transition-all cursor-pointer self-start"
 						style="color: {theme.text}; --tw-ring-offset-color: {theme.background}"
 					>
 						Button Styles
 					</button>
-					<div class="flex-1 flex flex-col gap-6">
+					<div class="flex-1 flex flex-col gap-4">
 						<!-- Row 1: Solid buttons -->
 						<div>
 							<div class="text-sm mb-3" style="color: {theme.muted}">Solid Buttons</div>
@@ -688,10 +688,10 @@
 
 			{:else if slides[selectedSlideIndex].id === 'callouts'}
 				<!-- Callouts & Alerts -->
-				<div class="w-full h-full flex flex-col p-12">
+				<div class="w-full h-full flex flex-col p-8">
 					<button
 						onclick={() => handleColorClick(theme.text, 'Heading')}
-						class="text-3xl font-bold mb-8 hover:ring-2 hover:ring-blue-500 hover:ring-offset-4 rounded px-2 py-1 transition-all cursor-pointer self-start"
+						class="text-2xl font-bold mb-4 hover:ring-2 hover:ring-blue-500 hover:ring-offset-4 rounded px-2 py-1 transition-all cursor-pointer self-start"
 						style="color: {theme.text}; --tw-ring-offset-color: {theme.background}"
 					>
 						Callouts & Alerts
@@ -734,18 +734,18 @@
 
 			{:else if slides[selectedSlideIndex].id === 'lists'}
 				<!-- Lists & Checks -->
-				<div class="w-full h-full flex flex-col p-12">
+				<div class="w-full h-full flex flex-col p-8">
 					<button
 						onclick={() => handleColorClick(theme.text, 'Heading')}
-						class="text-3xl font-bold mb-8 hover:ring-2 hover:ring-blue-500 hover:ring-offset-4 rounded px-2 py-1 transition-all cursor-pointer self-start"
+						class="text-2xl font-bold mb-4 hover:ring-2 hover:ring-blue-500 hover:ring-offset-4 rounded px-2 py-1 transition-all cursor-pointer self-start"
 						style="color: {theme.text}; --tw-ring-offset-color: {theme.background}"
 					>
 						Lists & Check Items
 					</button>
-					<div class="flex-1 grid grid-cols-3 gap-8">
+					<div class="flex-1 grid grid-cols-3 gap-5">
 						<!-- Checkmark list -->
 						<div>
-							<div class="text-sm mb-4" style="color: {theme.muted}">Feature Checklist</div>
+							<div class="text-sm mb-2" style="color: {theme.muted}">Feature Checklist</div>
 							<div class="space-y-3">
 								<button onclick={() => handleColorClick(theme.tertiary, 'Check item')} class="flex items-center gap-3 hover:ring-2 hover:ring-blue-500 rounded-lg p-2 -m-2 transition-all cursor-pointer w-full text-left">
 									<div class="w-5 h-5 rounded-full flex items-center justify-center" style="background-color: {hexToRgba(theme.tertiary, 0.2)}">
@@ -769,7 +769,7 @@
 						</div>
 						<!-- Numbered list -->
 						<div>
-							<div class="text-sm mb-4" style="color: {theme.muted}">Numbered Steps</div>
+							<div class="text-sm mb-2" style="color: {theme.muted}">Numbered Steps</div>
 							<div class="space-y-3">
 								<button onclick={() => handleColorClick(theme.accent, 'Numbered item')} class="flex items-center gap-3 hover:ring-2 hover:ring-blue-500 rounded-lg p-2 -m-2 transition-all cursor-pointer w-full text-left">
 									<div class="w-6 h-6 rounded-full flex items-center justify-center text-xs font-bold" style="background-color: {theme.accent}; color: {theme.accentText}">1</div>
@@ -787,7 +787,7 @@
 						</div>
 						<!-- Icon list -->
 						<div>
-							<div class="text-sm mb-4" style="color: {theme.muted}">Icon List</div>
+							<div class="text-sm mb-2" style="color: {theme.muted}">Icon List</div>
 							<div class="space-y-3">
 								<button onclick={() => handleColorClick(theme.secondary, 'Icon list item')} class="flex items-center gap-3 hover:ring-2 hover:ring-blue-500 rounded-lg p-2 -m-2 transition-all cursor-pointer w-full text-left">
 									<svg class="w-5 h-5" style="color: {theme.secondary}" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z" /></svg>
@@ -808,19 +808,19 @@
 
 			{:else if slides[selectedSlideIndex].id === 'avatars'}
 				<!-- Avatars & Profiles -->
-				<div class="w-full h-full flex flex-col p-12">
+				<div class="w-full h-full flex flex-col p-8">
 					<button
 						onclick={() => handleColorClick(theme.text, 'Heading')}
-						class="text-3xl font-bold mb-8 hover:ring-2 hover:ring-blue-500 hover:ring-offset-4 rounded px-2 py-1 transition-all cursor-pointer self-start"
+						class="text-2xl font-bold mb-4 hover:ring-2 hover:ring-blue-500 hover:ring-offset-4 rounded px-2 py-1 transition-all cursor-pointer self-start"
 						style="color: {theme.text}; --tw-ring-offset-color: {theme.background}"
 					>
 						Avatars & Profiles
 					</button>
-					<div class="flex-1 flex flex-col gap-8">
+					<div class="flex-1 flex flex-col gap-5">
 						<!-- Avatar styles -->
 						<div>
-							<div class="text-sm mb-4" style="color: {theme.muted}">Avatar Styles</div>
-							<div class="flex items-center gap-6">
+							<div class="text-sm mb-2" style="color: {theme.muted}">Avatar Styles</div>
+							<div class="flex items-center gap-4">
 								<button onclick={() => handleColorClick(theme.accent, 'Initial avatar')} class="w-12 h-12 rounded-full flex items-center justify-center text-lg font-bold hover:ring-2 hover:ring-white/30 transition-all cursor-pointer" style="background-color: {theme.accent}; color: {theme.accentText}">JD</button>
 								<button onclick={() => handleColorClick(theme.secondary, 'Initial avatar')} class="w-12 h-12 rounded-full flex items-center justify-center text-lg font-bold hover:ring-2 hover:ring-white/30 transition-all cursor-pointer" style="background-color: {theme.secondary}; color: white">AK</button>
 								<button onclick={() => handleColorClick(theme.tertiary, 'Initial avatar')} class="w-12 h-12 rounded-full flex items-center justify-center text-lg font-bold hover:ring-2 hover:ring-white/30 transition-all cursor-pointer" style="background-color: {theme.tertiary}; color: white">MR</button>
@@ -832,8 +832,8 @@
 						</div>
 						<!-- Avatar with status -->
 						<div>
-							<div class="text-sm mb-4" style="color: {theme.muted}">With Status Indicator</div>
-							<div class="flex items-center gap-6">
+							<div class="text-sm mb-2" style="color: {theme.muted}">With Status Indicator</div>
+							<div class="flex items-center gap-4">
 								<button onclick={() => handleColorClick(theme.tertiary, 'Online status')} class="relative hover:ring-2 hover:ring-blue-500 rounded-full transition-all cursor-pointer">
 									<div class="w-12 h-12 rounded-full flex items-center justify-center text-lg font-bold" style="background-color: {theme.accent}; color: {theme.accentText}">JD</div>
 									<div class="absolute bottom-0 right-0 w-3.5 h-3.5 rounded-full border-2" style="background-color: {theme.tertiary}; border-color: {theme.background}"></div>
@@ -850,7 +850,7 @@
 						</div>
 						<!-- Stacked avatars -->
 						<div>
-							<div class="text-sm mb-4" style="color: {theme.muted}">Stacked Avatars</div>
+							<div class="text-sm mb-2" style="color: {theme.muted}">Stacked Avatars</div>
 							<button onclick={() => handleColorClick(theme.accent, 'Stacked avatars')} class="flex items-center hover:ring-2 hover:ring-blue-500 rounded-full transition-all cursor-pointer p-1 -m-1">
 								<div class="w-10 h-10 rounded-full flex items-center justify-center text-sm font-bold border-2" style="background-color: {theme.accent}; color: {theme.accentText}; border-color: {theme.background}">JD</div>
 								<div class="w-10 h-10 rounded-full flex items-center justify-center text-sm font-bold border-2 -ml-3" style="background-color: {theme.secondary}; color: white; border-color: {theme.background}">AK</div>
@@ -860,7 +860,7 @@
 						</div>
 						<!-- Profile card -->
 						<div>
-							<div class="text-sm mb-4" style="color: {theme.muted}">Profile Card</div>
+							<div class="text-sm mb-2" style="color: {theme.muted}">Profile Card</div>
 							<button onclick={() => handleColorClick(theme.surface, 'Profile card')} class="flex items-center gap-4 p-4 rounded-xl hover:ring-2 hover:ring-blue-500 transition-all cursor-pointer" style="background-color: {theme.surface}">
 								<div class="w-14 h-14 rounded-full flex items-center justify-center text-xl font-bold" style="background: linear-gradient(135deg, {theme.accent}, {theme.secondary}); color: white">JD</div>
 								<div class="text-left">
@@ -878,18 +878,18 @@
 
 			{:else if slides[selectedSlideIndex].id === 'progress'}
 				<!-- Progress & Steps -->
-				<div class="w-full h-full flex flex-col p-12">
+				<div class="w-full h-full flex flex-col p-8">
 					<button
 						onclick={() => handleColorClick(theme.text, 'Heading')}
-						class="text-3xl font-bold mb-8 hover:ring-2 hover:ring-blue-500 hover:ring-offset-4 rounded px-2 py-1 transition-all cursor-pointer self-start"
+						class="text-2xl font-bold mb-4 hover:ring-2 hover:ring-blue-500 hover:ring-offset-4 rounded px-2 py-1 transition-all cursor-pointer self-start"
 						style="color: {theme.text}; --tw-ring-offset-color: {theme.background}"
 					>
 						Progress & Steps
 					</button>
-					<div class="flex-1 flex flex-col gap-8">
+					<div class="flex-1 flex flex-col gap-5">
 						<!-- Progress bars -->
 						<div>
-							<div class="text-sm mb-4" style="color: {theme.muted}">Progress Bars</div>
+							<div class="text-sm mb-2" style="color: {theme.muted}">Progress Bars</div>
 							<div class="space-y-4">
 								<button onclick={() => handleColorClick(theme.accent, 'Progress bar')} class="w-full hover:ring-2 hover:ring-blue-500 rounded-lg transition-all cursor-pointer p-2 -m-2">
 									<div class="flex justify-between text-sm mb-1">
@@ -922,7 +922,7 @@
 						</div>
 						<!-- Step indicator -->
 						<div>
-							<div class="text-sm mb-4" style="color: {theme.muted}">Step Indicator</div>
+							<div class="text-sm mb-2" style="color: {theme.muted}">Step Indicator</div>
 							<button onclick={() => handleColorClick(theme.accent, 'Step indicator')} class="flex items-center w-full hover:ring-2 hover:ring-blue-500 rounded-lg transition-all cursor-pointer p-2 -m-2">
 								<div class="flex items-center justify-center w-8 h-8 rounded-full text-sm font-bold" style="background-color: {theme.accent}; color: {theme.accentText}">
 									<svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="3" d="M5 13l4 4L19 7" /></svg>
@@ -937,8 +937,8 @@
 						</div>
 						<!-- Circular progress -->
 						<div>
-							<div class="text-sm mb-4" style="color: {theme.muted}">Circular Progress</div>
-							<div class="flex gap-8">
+							<div class="text-sm mb-2" style="color: {theme.muted}">Circular Progress</div>
+							<div class="flex gap-5">
 								<button onclick={() => handleColorClick(theme.accent, 'Circular progress')} class="hover:ring-2 hover:ring-blue-500 rounded-full transition-all cursor-pointer p-2">
 									<div class="relative w-20 h-20">
 										<svg class="w-20 h-20 -rotate-90">
@@ -964,17 +964,17 @@
 
 			{:else if slides[selectedSlideIndex].id === 'quotes'}
 				<!-- Quotes & Testimonials -->
-				<div class="w-full h-full flex flex-col p-12">
+				<div class="w-full h-full flex flex-col p-8">
 					<button
 						onclick={() => handleColorClick(theme.text, 'Heading')}
-						class="text-3xl font-bold mb-8 hover:ring-2 hover:ring-blue-500 hover:ring-offset-4 rounded px-2 py-1 transition-all cursor-pointer self-start"
+						class="text-2xl font-bold mb-4 hover:ring-2 hover:ring-blue-500 hover:ring-offset-4 rounded px-2 py-1 transition-all cursor-pointer self-start"
 						style="color: {theme.text}; --tw-ring-offset-color: {theme.background}"
 					>
 						Quotes & Testimonials
 					</button>
-					<div class="flex-1 grid grid-cols-2 gap-6">
+					<div class="flex-1 grid grid-cols-2 gap-4">
 						<!-- Large quote -->
-						<button onclick={() => handleColorClick(theme.accent, 'Quote accent')} class="rounded-2xl p-8 hover:ring-2 hover:ring-blue-500 transition-all cursor-pointer text-left col-span-2" style="background-color: {theme.surface}">
+						<button onclick={() => handleColorClick(theme.accent, 'Quote accent')} class="rounded-2xl p-5 hover:ring-2 hover:ring-blue-500 transition-all cursor-pointer text-left col-span-2" style="background-color: {theme.surface}">
 							<svg class="w-10 h-10 mb-4" style="color: {theme.accent}" fill="currentColor" viewBox="0 0 24 24"><path d="M14.017 21v-7.391c0-5.704 3.731-9.57 8.983-10.609l.995 2.151c-2.432.917-3.995 3.638-3.995 5.849h4v10h-9.983zm-14.017 0v-7.391c0-5.704 3.748-9.57 9-10.609l.996 2.151c-2.433.917-3.996 3.638-3.996 5.849h3.983v10h-9.983z" /></svg>
 							<p class="text-xl leading-relaxed mb-6" style="color: {theme.text}">This product has completely transformed how we work. The attention to detail is remarkable.</p>
 							<div class="flex items-center gap-3">
@@ -1005,23 +1005,23 @@
 
 			{:else if slides[selectedSlideIndex].id === 'dividers'}
 				<!-- Dividers & Separators -->
-				<div class="w-full h-full flex flex-col p-12">
+				<div class="w-full h-full flex flex-col p-8">
 					<button
 						onclick={() => handleColorClick(theme.text, 'Heading')}
-						class="text-3xl font-bold mb-8 hover:ring-2 hover:ring-blue-500 hover:ring-offset-4 rounded px-2 py-1 transition-all cursor-pointer self-start"
+						class="text-2xl font-bold mb-4 hover:ring-2 hover:ring-blue-500 hover:ring-offset-4 rounded px-2 py-1 transition-all cursor-pointer self-start"
 						style="color: {theme.text}; --tw-ring-offset-color: {theme.background}"
 					>
 						Dividers & Separators
 					</button>
-					<div class="flex-1 flex flex-col gap-8">
+					<div class="flex-1 flex flex-col gap-5">
 						<!-- Simple line -->
 						<div>
-							<div class="text-sm mb-4" style="color: {theme.muted}">Simple Line</div>
+							<div class="text-sm mb-2" style="color: {theme.muted}">Simple Line</div>
 							<button onclick={() => handleColorClick(theme.border, 'Divider')} class="w-full h-px hover:ring-2 hover:ring-blue-500 transition-all cursor-pointer" style="background-color: {theme.border}"></button>
 						</div>
 						<!-- With text -->
 						<div>
-							<div class="text-sm mb-4" style="color: {theme.muted}">With Text</div>
+							<div class="text-sm mb-2" style="color: {theme.muted}">With Text</div>
 							<button onclick={() => handleColorClick(theme.border, 'Divider with text')} class="flex items-center gap-4 hover:ring-2 hover:ring-blue-500 rounded-lg transition-all cursor-pointer p-2 -m-2 w-full">
 								<div class="flex-1 h-px" style="background-color: {theme.border}"></div>
 								<span class="text-sm" style="color: {theme.muted}">OR</span>
@@ -1030,17 +1030,17 @@
 						</div>
 						<!-- Gradient line -->
 						<div>
-							<div class="text-sm mb-4" style="color: {theme.muted}">Gradient</div>
+							<div class="text-sm mb-2" style="color: {theme.muted}">Gradient</div>
 							<button onclick={() => handleColorClick(theme.accent, 'Gradient divider')} class="w-full h-0.5 rounded hover:ring-2 hover:ring-blue-500 transition-all cursor-pointer" style="background: linear-gradient(90deg, transparent, {theme.accent}, {theme.secondary}, transparent)"></button>
 						</div>
 						<!-- Dashed -->
 						<div>
-							<div class="text-sm mb-4" style="color: {theme.muted}">Dashed</div>
+							<div class="text-sm mb-2" style="color: {theme.muted}">Dashed</div>
 							<button onclick={() => handleColorClick(theme.border, 'Dashed divider')} class="w-full border-t-2 border-dashed hover:ring-2 hover:ring-blue-500 transition-all cursor-pointer" style="border-color: {theme.border}"></button>
 						</div>
 						<!-- With icon -->
 						<div>
-							<div class="text-sm mb-4" style="color: {theme.muted}">With Icon</div>
+							<div class="text-sm mb-2" style="color: {theme.muted}">With Icon</div>
 							<button onclick={() => handleColorClick(theme.accent, 'Divider with icon')} class="flex items-center gap-4 hover:ring-2 hover:ring-blue-500 rounded-lg transition-all cursor-pointer p-2 -m-2 w-full">
 								<div class="flex-1 h-px" style="background-color: {theme.border}"></div>
 								<div class="w-8 h-8 rounded-full flex items-center justify-center" style="background-color: {hexToRgba(theme.accent, 0.1)}">
@@ -1051,7 +1051,7 @@
 						</div>
 						<!-- Decorative -->
 						<div>
-							<div class="text-sm mb-4" style="color: {theme.muted}">Decorative</div>
+							<div class="text-sm mb-2" style="color: {theme.muted}">Decorative</div>
 							<button onclick={() => handleColorClick(theme.accent, 'Decorative divider')} class="flex items-center justify-center gap-2 hover:ring-2 hover:ring-blue-500 rounded-lg transition-all cursor-pointer p-2 -m-2 w-full">
 								<div class="w-2 h-2 rounded-full" style="background-color: {theme.accent}"></div>
 								<div class="w-1.5 h-1.5 rounded-full" style="background-color: {theme.secondary}"></div>
@@ -1067,15 +1067,15 @@
 
 			{:else if slides[selectedSlideIndex].id === 'highlights'}
 				<!-- Text Highlights -->
-				<div class="w-full h-full flex flex-col p-12">
+				<div class="w-full h-full flex flex-col p-8">
 					<button
 						onclick={() => handleColorClick(theme.text, 'Heading')}
-						class="text-3xl font-bold mb-8 hover:ring-2 hover:ring-blue-500 hover:ring-offset-4 rounded px-2 py-1 transition-all cursor-pointer self-start"
+						class="text-2xl font-bold mb-4 hover:ring-2 hover:ring-blue-500 hover:ring-offset-4 rounded px-2 py-1 transition-all cursor-pointer self-start"
 						style="color: {theme.text}; --tw-ring-offset-color: {theme.background}"
 					>
 						Text Highlights
 					</button>
-					<div class="flex-1 flex flex-col gap-8">
+					<div class="flex-1 flex flex-col gap-5">
 						<!-- Background highlight -->
 						<div>
 							<div class="text-sm mb-3" style="color: {theme.muted}">Background Highlight</div>
@@ -1088,7 +1088,7 @@
 						<!-- Underline styles -->
 						<div>
 							<div class="text-sm mb-3" style="color: {theme.muted}">Underline Styles</div>
-							<div class="flex gap-8 text-xl">
+							<div class="flex gap-5 text-xl">
 								<button onclick={() => handleColorClick(theme.accent, 'Solid underline')} class="hover:ring-2 hover:ring-blue-500 rounded transition-all cursor-pointer px-1 border-b-2" style="color: {theme.text}; border-color: {theme.accent}">Solid line</button>
 								<button onclick={() => handleColorClick(theme.secondary, 'Wavy underline')} class="hover:ring-2 hover:ring-blue-500 rounded transition-all cursor-pointer px-1" style="color: {theme.text}; text-decoration: underline wavy; text-decoration-color: {theme.secondary}">Wavy line</button>
 								<button onclick={() => handleColorClick(theme.tertiary, 'Dotted underline')} class="hover:ring-2 hover:ring-blue-500 rounded transition-all cursor-pointer px-1 border-b-2 border-dotted" style="color: {theme.text}; border-color: {theme.tertiary}">Dotted line</button>
