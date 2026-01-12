@@ -37,6 +37,14 @@
 		{ id: 'pills-badges', name: 'Pills & Badges' },
 		{ id: 'flow', name: 'Flow Diagram' },
 		{ id: 'stats', name: 'Stats & Numbers' },
+		{ id: 'buttons', name: 'Buttons' },
+		{ id: 'callouts', name: 'Callouts & Alerts' },
+		{ id: 'lists', name: 'Lists & Checks' },
+		{ id: 'avatars', name: 'Avatars & Profiles' },
+		{ id: 'progress', name: 'Progress & Steps' },
+		{ id: 'quotes', name: 'Quotes & Testimonials' },
+		{ id: 'dividers', name: 'Dividers & Separators' },
+		{ id: 'highlights', name: 'Text Highlights' },
 	];
 
 	async function handleColorClick(hex: string, label: string) {
@@ -615,6 +623,506 @@
 							<div class="text-4xl font-bold mb-1" style="color: {theme.text}">24/7</div>
 							<div class="text-sm" style="color: {theme.muted}">Support</div>
 						</button>
+					</div>
+				</div>
+
+			{:else if slides[selectedSlideIndex].id === 'buttons'}
+				<!-- Buttons - Various button styles -->
+				<div class="w-full h-full flex flex-col p-12">
+					<button
+						onclick={() => handleColorClick(theme.text, 'Heading')}
+						class="text-3xl font-bold mb-8 hover:ring-2 hover:ring-blue-500 hover:ring-offset-4 rounded px-2 py-1 transition-all cursor-pointer self-start"
+						style="color: {theme.text}; --tw-ring-offset-color: {theme.background}"
+					>
+						Button Styles
+					</button>
+					<div class="flex-1 flex flex-col gap-6">
+						<!-- Row 1: Solid buttons -->
+						<div>
+							<div class="text-sm mb-3" style="color: {theme.muted}">Solid Buttons</div>
+							<div class="flex gap-3 flex-wrap">
+								<button onclick={() => handleColorClick(theme.accent, 'Solid primary')} class="px-5 py-2.5 rounded-lg text-sm font-semibold hover:ring-2 hover:ring-white/30 transition-all cursor-pointer" style="background-color: {theme.accent}; color: {theme.accentText}">Primary</button>
+								<button onclick={() => handleColorClick(theme.secondary, 'Solid secondary')} class="px-5 py-2.5 rounded-lg text-sm font-semibold hover:ring-2 hover:ring-white/30 transition-all cursor-pointer" style="background-color: {theme.secondary}; color: white">Secondary</button>
+								<button onclick={() => handleColorClick(theme.tertiary, 'Solid success')} class="px-5 py-2.5 rounded-lg text-sm font-semibold hover:ring-2 hover:ring-white/30 transition-all cursor-pointer" style="background-color: {theme.tertiary}; color: white">Success</button>
+								<button onclick={() => handleColorClick(theme.surface, 'Solid muted')} class="px-5 py-2.5 rounded-lg text-sm font-semibold hover:ring-2 hover:ring-blue-500 transition-all cursor-pointer" style="background-color: {theme.surface}; color: {theme.text}">Muted</button>
+							</div>
+						</div>
+						<!-- Row 2: Outline buttons -->
+						<div>
+							<div class="text-sm mb-3" style="color: {theme.muted}">Outline Buttons</div>
+							<div class="flex gap-3 flex-wrap">
+								<button onclick={() => handleColorClick(theme.accent, 'Outline primary')} class="px-5 py-2.5 rounded-lg text-sm font-semibold border-2 hover:ring-2 hover:ring-blue-500 transition-all cursor-pointer" style="border-color: {theme.accent}; color: {theme.accent}">Primary</button>
+								<button onclick={() => handleColorClick(theme.secondary, 'Outline secondary')} class="px-5 py-2.5 rounded-lg text-sm font-semibold border-2 hover:ring-2 hover:ring-blue-500 transition-all cursor-pointer" style="border-color: {theme.secondary}; color: {theme.secondary}">Secondary</button>
+								<button onclick={() => handleColorClick(theme.text, 'Outline default')} class="px-5 py-2.5 rounded-lg text-sm font-semibold border-2 hover:ring-2 hover:ring-blue-500 transition-all cursor-pointer" style="border-color: {theme.border}; color: {theme.text}">Default</button>
+							</div>
+						</div>
+						<!-- Row 3: Ghost/Tinted buttons -->
+						<div>
+							<div class="text-sm mb-3" style="color: {theme.muted}">Ghost / Tinted Buttons</div>
+							<div class="flex gap-3 flex-wrap">
+								<button onclick={() => handleColorClick(theme.accent, 'Ghost primary')} class="px-5 py-2.5 rounded-lg text-sm font-semibold hover:ring-2 hover:ring-blue-500 transition-all cursor-pointer" style="background-color: {hexToRgba(theme.accent, 0.1)}; color: {theme.accent}">Primary</button>
+								<button onclick={() => handleColorClick(theme.secondary, 'Ghost secondary')} class="px-5 py-2.5 rounded-lg text-sm font-semibold hover:ring-2 hover:ring-blue-500 transition-all cursor-pointer" style="background-color: {hexToRgba(theme.secondary, 0.1)}; color: {theme.secondary}">Secondary</button>
+								<button onclick={() => handleColorClick(theme.tertiary, 'Ghost success')} class="px-5 py-2.5 rounded-lg text-sm font-semibold hover:ring-2 hover:ring-blue-500 transition-all cursor-pointer" style="background-color: {hexToRgba(theme.tertiary, 0.1)}; color: {theme.tertiary}">Success</button>
+							</div>
+						</div>
+						<!-- Row 4: Icon buttons & Special -->
+						<div>
+							<div class="text-sm mb-3" style="color: {theme.muted}">Icon Buttons & Gradients</div>
+							<div class="flex gap-3 flex-wrap items-center">
+								<button onclick={() => handleColorClick(theme.accent, 'Icon button')} class="inline-flex items-center gap-2 px-5 py-2.5 rounded-lg text-sm font-semibold hover:ring-2 hover:ring-white/30 transition-all cursor-pointer" style="background-color: {theme.accent}; color: {theme.accentText}">
+									<svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4" /></svg>
+									Add New
+								</button>
+								<button onclick={() => handleColorClick(theme.accent, 'Gradient button')} class="px-5 py-2.5 rounded-lg text-sm font-semibold text-white hover:ring-2 hover:ring-white/30 transition-all cursor-pointer" style="background: linear-gradient(135deg, {theme.accent}, {theme.secondary})">Gradient</button>
+								<button onclick={() => handleColorClick(theme.accent, 'Neon button')} class="px-5 py-2.5 rounded-lg text-sm font-semibold border-2 hover:ring-2 hover:ring-white/30 transition-all cursor-pointer" style="border-color: {theme.accent}; color: {theme.accent}; background-color: {hexToRgba(theme.accent, 0.1)}; box-shadow: 0 0 15px {hexToRgba(theme.accent, 0.3)}">Neon</button>
+								<button onclick={() => handleColorClick(theme.surface, 'Icon only')} class="w-10 h-10 rounded-lg flex items-center justify-center hover:ring-2 hover:ring-blue-500 transition-all cursor-pointer" style="background-color: {theme.surface}; color: {theme.text}">
+									<svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16" /></svg>
+								</button>
+								<button onclick={() => handleColorClick(theme.accent, 'Circle icon')} class="w-10 h-10 rounded-full flex items-center justify-center hover:ring-2 hover:ring-white/30 transition-all cursor-pointer" style="background-color: {theme.accent}; color: {theme.accentText}">
+									<svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4" /></svg>
+								</button>
+							</div>
+						</div>
+					</div>
+				</div>
+
+			{:else if slides[selectedSlideIndex].id === 'callouts'}
+				<!-- Callouts & Alerts -->
+				<div class="w-full h-full flex flex-col p-12">
+					<button
+						onclick={() => handleColorClick(theme.text, 'Heading')}
+						class="text-3xl font-bold mb-8 hover:ring-2 hover:ring-blue-500 hover:ring-offset-4 rounded px-2 py-1 transition-all cursor-pointer self-start"
+						style="color: {theme.text}; --tw-ring-offset-color: {theme.background}"
+					>
+						Callouts & Alerts
+					</button>
+					<div class="flex-1 flex flex-col gap-4">
+						<!-- Info callout -->
+						<button onclick={() => handleColorClick(theme.accent, 'Info callout')} class="flex items-start gap-3 p-4 rounded-xl hover:ring-2 hover:ring-blue-500 transition-all cursor-pointer text-left" style="background-color: {hexToRgba(theme.accent, 0.1)}; border-left: 4px solid {theme.accent}">
+							<svg class="w-5 h-5 shrink-0 mt-0.5" style="color: {theme.accent}" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" /></svg>
+							<div>
+								<div class="font-semibold text-sm" style="color: {theme.accent}">Information</div>
+								<div class="text-sm mt-1" style="color: {theme.muted}">This is an informational message with helpful context.</div>
+							</div>
+						</button>
+						<!-- Success callout -->
+						<button onclick={() => handleColorClick(theme.tertiary, 'Success callout')} class="flex items-start gap-3 p-4 rounded-xl hover:ring-2 hover:ring-blue-500 transition-all cursor-pointer text-left" style="background-color: {hexToRgba(theme.tertiary, 0.1)}; border-left: 4px solid {theme.tertiary}">
+							<svg class="w-5 h-5 shrink-0 mt-0.5" style="color: {theme.tertiary}" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" /></svg>
+							<div>
+								<div class="font-semibold text-sm" style="color: {theme.tertiary}">Success</div>
+								<div class="text-sm mt-1" style="color: {theme.muted}">Operation completed successfully.</div>
+							</div>
+						</button>
+						<!-- Warning callout -->
+						<button onclick={() => handleColorClick('#f59e0b', 'Warning callout')} class="flex items-start gap-3 p-4 rounded-xl hover:ring-2 hover:ring-blue-500 transition-all cursor-pointer text-left" style="background-color: rgba(245, 158, 11, 0.1); border-left: 4px solid #f59e0b">
+							<svg class="w-5 h-5 shrink-0 mt-0.5 text-amber-500" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z" /></svg>
+							<div>
+								<div class="font-semibold text-sm text-amber-500">Warning</div>
+								<div class="text-sm mt-1" style="color: {theme.muted}">Please review before proceeding.</div>
+							</div>
+						</button>
+						<!-- Outlined callout -->
+						<button onclick={() => handleColorClick(theme.secondary, 'Outlined callout')} class="flex items-start gap-3 p-4 rounded-xl border hover:ring-2 hover:ring-blue-500 transition-all cursor-pointer text-left" style="border-color: {theme.secondary}">
+							<svg class="w-5 h-5 shrink-0 mt-0.5" style="color: {theme.secondary}" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9.663 17h4.673M12 3v1m6.364 1.636l-.707.707M21 12h-1M4 12H3m3.343-5.657l-.707-.707m2.828 9.9a5 5 0 117.072 0l-.548.547A3.374 3.374 0 0014 18.469V19a2 2 0 11-4 0v-.531c0-.895-.356-1.754-.988-2.386l-.548-.547z" /></svg>
+							<div>
+								<div class="font-semibold text-sm" style="color: {theme.secondary}">Pro Tip</div>
+								<div class="text-sm mt-1" style="color: {theme.muted}">Use keyboard shortcuts for faster navigation.</div>
+							</div>
+						</button>
+					</div>
+				</div>
+
+			{:else if slides[selectedSlideIndex].id === 'lists'}
+				<!-- Lists & Checks -->
+				<div class="w-full h-full flex flex-col p-12">
+					<button
+						onclick={() => handleColorClick(theme.text, 'Heading')}
+						class="text-3xl font-bold mb-8 hover:ring-2 hover:ring-blue-500 hover:ring-offset-4 rounded px-2 py-1 transition-all cursor-pointer self-start"
+						style="color: {theme.text}; --tw-ring-offset-color: {theme.background}"
+					>
+						Lists & Check Items
+					</button>
+					<div class="flex-1 grid grid-cols-3 gap-8">
+						<!-- Checkmark list -->
+						<div>
+							<div class="text-sm mb-4" style="color: {theme.muted}">Feature Checklist</div>
+							<div class="space-y-3">
+								<button onclick={() => handleColorClick(theme.tertiary, 'Check item')} class="flex items-center gap-3 hover:ring-2 hover:ring-blue-500 rounded-lg p-2 -m-2 transition-all cursor-pointer w-full text-left">
+									<div class="w-5 h-5 rounded-full flex items-center justify-center" style="background-color: {hexToRgba(theme.tertiary, 0.2)}">
+										<svg class="w-3 h-3" style="color: {theme.tertiary}" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="3" d="M5 13l4 4L19 7" /></svg>
+									</div>
+									<span style="color: {theme.text}">Unlimited projects</span>
+								</button>
+								<button onclick={() => handleColorClick(theme.tertiary, 'Check item')} class="flex items-center gap-3 hover:ring-2 hover:ring-blue-500 rounded-lg p-2 -m-2 transition-all cursor-pointer w-full text-left">
+									<div class="w-5 h-5 rounded-full flex items-center justify-center" style="background-color: {hexToRgba(theme.tertiary, 0.2)}">
+										<svg class="w-3 h-3" style="color: {theme.tertiary}" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="3" d="M5 13l4 4L19 7" /></svg>
+									</div>
+									<span style="color: {theme.text}">Priority support</span>
+								</button>
+								<button onclick={() => handleColorClick(theme.tertiary, 'Check item')} class="flex items-center gap-3 hover:ring-2 hover:ring-blue-500 rounded-lg p-2 -m-2 transition-all cursor-pointer w-full text-left">
+									<div class="w-5 h-5 rounded-full flex items-center justify-center" style="background-color: {hexToRgba(theme.tertiary, 0.2)}">
+										<svg class="w-3 h-3" style="color: {theme.tertiary}" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="3" d="M5 13l4 4L19 7" /></svg>
+									</div>
+									<span style="color: {theme.text}">Advanced analytics</span>
+								</button>
+							</div>
+						</div>
+						<!-- Numbered list -->
+						<div>
+							<div class="text-sm mb-4" style="color: {theme.muted}">Numbered Steps</div>
+							<div class="space-y-3">
+								<button onclick={() => handleColorClick(theme.accent, 'Numbered item')} class="flex items-center gap-3 hover:ring-2 hover:ring-blue-500 rounded-lg p-2 -m-2 transition-all cursor-pointer w-full text-left">
+									<div class="w-6 h-6 rounded-full flex items-center justify-center text-xs font-bold" style="background-color: {theme.accent}; color: {theme.accentText}">1</div>
+									<span style="color: {theme.text}">Create account</span>
+								</button>
+								<button onclick={() => handleColorClick(theme.accent, 'Numbered item')} class="flex items-center gap-3 hover:ring-2 hover:ring-blue-500 rounded-lg p-2 -m-2 transition-all cursor-pointer w-full text-left">
+									<div class="w-6 h-6 rounded-full flex items-center justify-center text-xs font-bold" style="background-color: {theme.accent}; color: {theme.accentText}">2</div>
+									<span style="color: {theme.text}">Set up profile</span>
+								</button>
+								<button onclick={() => handleColorClick(theme.accent, 'Numbered item')} class="flex items-center gap-3 hover:ring-2 hover:ring-blue-500 rounded-lg p-2 -m-2 transition-all cursor-pointer w-full text-left">
+									<div class="w-6 h-6 rounded-full flex items-center justify-center text-xs font-bold" style="background-color: {theme.accent}; color: {theme.accentText}">3</div>
+									<span style="color: {theme.text}">Start building</span>
+								</button>
+							</div>
+						</div>
+						<!-- Icon list -->
+						<div>
+							<div class="text-sm mb-4" style="color: {theme.muted}">Icon List</div>
+							<div class="space-y-3">
+								<button onclick={() => handleColorClick(theme.secondary, 'Icon list item')} class="flex items-center gap-3 hover:ring-2 hover:ring-blue-500 rounded-lg p-2 -m-2 transition-all cursor-pointer w-full text-left">
+									<svg class="w-5 h-5" style="color: {theme.secondary}" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z" /></svg>
+									<span style="color: {theme.text}">Lightning fast</span>
+								</button>
+								<button onclick={() => handleColorClick(theme.secondary, 'Icon list item')} class="flex items-center gap-3 hover:ring-2 hover:ring-blue-500 rounded-lg p-2 -m-2 transition-all cursor-pointer w-full text-left">
+									<svg class="w-5 h-5" style="color: {theme.secondary}" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z" /></svg>
+									<span style="color: {theme.text}">Secure by default</span>
+								</button>
+								<button onclick={() => handleColorClick(theme.secondary, 'Icon list item')} class="flex items-center gap-3 hover:ring-2 hover:ring-blue-500 rounded-lg p-2 -m-2 transition-all cursor-pointer w-full text-left">
+									<svg class="w-5 h-5" style="color: {theme.secondary}" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3.055 11H5a2 2 0 012 2v1a2 2 0 002 2 2 2 0 012 2v2.945M8 3.935V5.5A2.5 2.5 0 0010.5 8h.5a2 2 0 012 2 2 2 0 104 0 2 2 0 012-2h1.064M15 20.488V18a2 2 0 012-2h3.064M21 12a9 9 0 11-18 0 9 9 0 0118 0z" /></svg>
+									<span style="color: {theme.text}">Global CDN</span>
+								</button>
+							</div>
+						</div>
+					</div>
+				</div>
+
+			{:else if slides[selectedSlideIndex].id === 'avatars'}
+				<!-- Avatars & Profiles -->
+				<div class="w-full h-full flex flex-col p-12">
+					<button
+						onclick={() => handleColorClick(theme.text, 'Heading')}
+						class="text-3xl font-bold mb-8 hover:ring-2 hover:ring-blue-500 hover:ring-offset-4 rounded px-2 py-1 transition-all cursor-pointer self-start"
+						style="color: {theme.text}; --tw-ring-offset-color: {theme.background}"
+					>
+						Avatars & Profiles
+					</button>
+					<div class="flex-1 flex flex-col gap-8">
+						<!-- Avatar styles -->
+						<div>
+							<div class="text-sm mb-4" style="color: {theme.muted}">Avatar Styles</div>
+							<div class="flex items-center gap-6">
+								<button onclick={() => handleColorClick(theme.accent, 'Initial avatar')} class="w-12 h-12 rounded-full flex items-center justify-center text-lg font-bold hover:ring-2 hover:ring-white/30 transition-all cursor-pointer" style="background-color: {theme.accent}; color: {theme.accentText}">JD</button>
+								<button onclick={() => handleColorClick(theme.secondary, 'Initial avatar')} class="w-12 h-12 rounded-full flex items-center justify-center text-lg font-bold hover:ring-2 hover:ring-white/30 transition-all cursor-pointer" style="background-color: {theme.secondary}; color: white">AK</button>
+								<button onclick={() => handleColorClick(theme.tertiary, 'Initial avatar')} class="w-12 h-12 rounded-full flex items-center justify-center text-lg font-bold hover:ring-2 hover:ring-white/30 transition-all cursor-pointer" style="background-color: {theme.tertiary}; color: white">MR</button>
+								<button onclick={() => handleColorClick(theme.accent, 'Gradient avatar')} class="w-12 h-12 rounded-full flex items-center justify-center text-lg font-bold text-white hover:ring-2 hover:ring-white/30 transition-all cursor-pointer" style="background: linear-gradient(135deg, {theme.accent}, {theme.secondary})">SM</button>
+								<button onclick={() => handleColorClick(theme.surface, 'Placeholder avatar')} class="w-12 h-12 rounded-full flex items-center justify-center hover:ring-2 hover:ring-blue-500 transition-all cursor-pointer" style="background-color: {theme.surface}">
+									<svg class="w-6 h-6" style="color: {theme.muted}" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z" /></svg>
+								</button>
+							</div>
+						</div>
+						<!-- Avatar with status -->
+						<div>
+							<div class="text-sm mb-4" style="color: {theme.muted}">With Status Indicator</div>
+							<div class="flex items-center gap-6">
+								<button onclick={() => handleColorClick(theme.tertiary, 'Online status')} class="relative hover:ring-2 hover:ring-blue-500 rounded-full transition-all cursor-pointer">
+									<div class="w-12 h-12 rounded-full flex items-center justify-center text-lg font-bold" style="background-color: {theme.accent}; color: {theme.accentText}">JD</div>
+									<div class="absolute bottom-0 right-0 w-3.5 h-3.5 rounded-full border-2" style="background-color: {theme.tertiary}; border-color: {theme.background}"></div>
+								</button>
+								<button onclick={() => handleColorClick('#f59e0b', 'Away status')} class="relative hover:ring-2 hover:ring-blue-500 rounded-full transition-all cursor-pointer">
+									<div class="w-12 h-12 rounded-full flex items-center justify-center text-lg font-bold" style="background-color: {theme.secondary}; color: white">AK</div>
+									<div class="absolute bottom-0 right-0 w-3.5 h-3.5 rounded-full border-2 bg-amber-500" style="border-color: {theme.background}"></div>
+								</button>
+								<button onclick={() => handleColorClick(theme.muted, 'Offline status')} class="relative hover:ring-2 hover:ring-blue-500 rounded-full transition-all cursor-pointer">
+									<div class="w-12 h-12 rounded-full flex items-center justify-center text-lg font-bold" style="background-color: {theme.tertiary}; color: white">MR</div>
+									<div class="absolute bottom-0 right-0 w-3.5 h-3.5 rounded-full border-2" style="background-color: {theme.muted}; border-color: {theme.background}"></div>
+								</button>
+							</div>
+						</div>
+						<!-- Stacked avatars -->
+						<div>
+							<div class="text-sm mb-4" style="color: {theme.muted}">Stacked Avatars</div>
+							<button onclick={() => handleColorClick(theme.accent, 'Stacked avatars')} class="flex items-center hover:ring-2 hover:ring-blue-500 rounded-full transition-all cursor-pointer p-1 -m-1">
+								<div class="w-10 h-10 rounded-full flex items-center justify-center text-sm font-bold border-2" style="background-color: {theme.accent}; color: {theme.accentText}; border-color: {theme.background}">JD</div>
+								<div class="w-10 h-10 rounded-full flex items-center justify-center text-sm font-bold border-2 -ml-3" style="background-color: {theme.secondary}; color: white; border-color: {theme.background}">AK</div>
+								<div class="w-10 h-10 rounded-full flex items-center justify-center text-sm font-bold border-2 -ml-3" style="background-color: {theme.tertiary}; color: white; border-color: {theme.background}">MR</div>
+								<div class="w-10 h-10 rounded-full flex items-center justify-center text-sm font-bold border-2 -ml-3" style="background-color: {theme.surface}; color: {theme.muted}; border-color: {theme.background}">+5</div>
+							</button>
+						</div>
+						<!-- Profile card -->
+						<div>
+							<div class="text-sm mb-4" style="color: {theme.muted}">Profile Card</div>
+							<button onclick={() => handleColorClick(theme.surface, 'Profile card')} class="flex items-center gap-4 p-4 rounded-xl hover:ring-2 hover:ring-blue-500 transition-all cursor-pointer" style="background-color: {theme.surface}">
+								<div class="w-14 h-14 rounded-full flex items-center justify-center text-xl font-bold" style="background: linear-gradient(135deg, {theme.accent}, {theme.secondary}); color: white">JD</div>
+								<div class="text-left">
+									<div class="font-semibold" style="color: {theme.text}">John Doe</div>
+									<div class="text-sm" style="color: {theme.muted}">Product Designer</div>
+									<div class="flex gap-2 mt-2">
+										<span class="px-2 py-0.5 rounded text-xs" style="background-color: {hexToRgba(theme.accent, 0.15)}; color: {theme.accent}">Design</span>
+										<span class="px-2 py-0.5 rounded text-xs" style="background-color: {hexToRgba(theme.secondary, 0.15)}; color: {theme.secondary}">UX</span>
+									</div>
+								</div>
+							</button>
+						</div>
+					</div>
+				</div>
+
+			{:else if slides[selectedSlideIndex].id === 'progress'}
+				<!-- Progress & Steps -->
+				<div class="w-full h-full flex flex-col p-12">
+					<button
+						onclick={() => handleColorClick(theme.text, 'Heading')}
+						class="text-3xl font-bold mb-8 hover:ring-2 hover:ring-blue-500 hover:ring-offset-4 rounded px-2 py-1 transition-all cursor-pointer self-start"
+						style="color: {theme.text}; --tw-ring-offset-color: {theme.background}"
+					>
+						Progress & Steps
+					</button>
+					<div class="flex-1 flex flex-col gap-8">
+						<!-- Progress bars -->
+						<div>
+							<div class="text-sm mb-4" style="color: {theme.muted}">Progress Bars</div>
+							<div class="space-y-4">
+								<button onclick={() => handleColorClick(theme.accent, 'Progress bar')} class="w-full hover:ring-2 hover:ring-blue-500 rounded-lg transition-all cursor-pointer p-2 -m-2">
+									<div class="flex justify-between text-sm mb-1">
+										<span style="color: {theme.text}">Progress</span>
+										<span style="color: {theme.accent}">75%</span>
+									</div>
+									<div class="h-2 rounded-full" style="background-color: {theme.surface}">
+										<div class="h-full rounded-full" style="width: 75%; background-color: {theme.accent}"></div>
+									</div>
+								</button>
+								<button onclick={() => handleColorClick(theme.tertiary, 'Success progress')} class="w-full hover:ring-2 hover:ring-blue-500 rounded-lg transition-all cursor-pointer p-2 -m-2">
+									<div class="flex justify-between text-sm mb-1">
+										<span style="color: {theme.text}">Completed</span>
+										<span style="color: {theme.tertiary}">100%</span>
+									</div>
+									<div class="h-2 rounded-full" style="background-color: {theme.surface}">
+										<div class="h-full rounded-full" style="width: 100%; background-color: {theme.tertiary}"></div>
+									</div>
+								</button>
+								<button onclick={() => handleColorClick(theme.accent, 'Gradient progress')} class="w-full hover:ring-2 hover:ring-blue-500 rounded-lg transition-all cursor-pointer p-2 -m-2">
+									<div class="flex justify-between text-sm mb-1">
+										<span style="color: {theme.text}">Upload</span>
+										<span style="color: {theme.muted}">60%</span>
+									</div>
+									<div class="h-2 rounded-full" style="background-color: {theme.surface}">
+										<div class="h-full rounded-full" style="width: 60%; background: linear-gradient(90deg, {theme.accent}, {theme.secondary})"></div>
+									</div>
+								</button>
+							</div>
+						</div>
+						<!-- Step indicator -->
+						<div>
+							<div class="text-sm mb-4" style="color: {theme.muted}">Step Indicator</div>
+							<button onclick={() => handleColorClick(theme.accent, 'Step indicator')} class="flex items-center w-full hover:ring-2 hover:ring-blue-500 rounded-lg transition-all cursor-pointer p-2 -m-2">
+								<div class="flex items-center justify-center w-8 h-8 rounded-full text-sm font-bold" style="background-color: {theme.accent}; color: {theme.accentText}">
+									<svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="3" d="M5 13l4 4L19 7" /></svg>
+								</div>
+								<div class="flex-1 h-1 mx-2" style="background-color: {theme.accent}"></div>
+								<div class="flex items-center justify-center w-8 h-8 rounded-full text-sm font-bold" style="background-color: {theme.accent}; color: {theme.accentText}">2</div>
+								<div class="flex-1 h-1 mx-2" style="background-color: {theme.surface}"></div>
+								<div class="flex items-center justify-center w-8 h-8 rounded-full text-sm font-bold" style="background-color: {theme.surface}; color: {theme.muted}">3</div>
+								<div class="flex-1 h-1 mx-2" style="background-color: {theme.surface}"></div>
+								<div class="flex items-center justify-center w-8 h-8 rounded-full text-sm font-bold" style="background-color: {theme.surface}; color: {theme.muted}">4</div>
+							</button>
+						</div>
+						<!-- Circular progress -->
+						<div>
+							<div class="text-sm mb-4" style="color: {theme.muted}">Circular Progress</div>
+							<div class="flex gap-8">
+								<button onclick={() => handleColorClick(theme.accent, 'Circular progress')} class="hover:ring-2 hover:ring-blue-500 rounded-full transition-all cursor-pointer p-2">
+									<div class="relative w-20 h-20">
+										<svg class="w-20 h-20 -rotate-90">
+											<circle cx="40" cy="40" r="36" stroke-width="8" fill="none" style="stroke: {theme.surface}" />
+											<circle cx="40" cy="40" r="36" stroke-width="8" fill="none" stroke-linecap="round" stroke-dasharray="226" stroke-dashoffset="56" style="stroke: {theme.accent}" />
+										</svg>
+										<div class="absolute inset-0 flex items-center justify-center text-lg font-bold" style="color: {theme.text}">75%</div>
+									</div>
+								</button>
+								<button onclick={() => handleColorClick(theme.secondary, 'Circular progress')} class="hover:ring-2 hover:ring-blue-500 rounded-full transition-all cursor-pointer p-2">
+									<div class="relative w-20 h-20">
+										<svg class="w-20 h-20 -rotate-90">
+											<circle cx="40" cy="40" r="36" stroke-width="8" fill="none" style="stroke: {theme.surface}" />
+											<circle cx="40" cy="40" r="36" stroke-width="8" fill="none" stroke-linecap="round" stroke-dasharray="226" stroke-dashoffset="113" style="stroke: {theme.secondary}" />
+										</svg>
+										<div class="absolute inset-0 flex items-center justify-center text-lg font-bold" style="color: {theme.text}">50%</div>
+									</div>
+								</button>
+							</div>
+						</div>
+					</div>
+				</div>
+
+			{:else if slides[selectedSlideIndex].id === 'quotes'}
+				<!-- Quotes & Testimonials -->
+				<div class="w-full h-full flex flex-col p-12">
+					<button
+						onclick={() => handleColorClick(theme.text, 'Heading')}
+						class="text-3xl font-bold mb-8 hover:ring-2 hover:ring-blue-500 hover:ring-offset-4 rounded px-2 py-1 transition-all cursor-pointer self-start"
+						style="color: {theme.text}; --tw-ring-offset-color: {theme.background}"
+					>
+						Quotes & Testimonials
+					</button>
+					<div class="flex-1 grid grid-cols-2 gap-6">
+						<!-- Large quote -->
+						<button onclick={() => handleColorClick(theme.accent, 'Quote accent')} class="rounded-2xl p-8 hover:ring-2 hover:ring-blue-500 transition-all cursor-pointer text-left col-span-2" style="background-color: {theme.surface}">
+							<svg class="w-10 h-10 mb-4" style="color: {theme.accent}" fill="currentColor" viewBox="0 0 24 24"><path d="M14.017 21v-7.391c0-5.704 3.731-9.57 8.983-10.609l.995 2.151c-2.432.917-3.995 3.638-3.995 5.849h4v10h-9.983zm-14.017 0v-7.391c0-5.704 3.748-9.57 9-10.609l.996 2.151c-2.433.917-3.996 3.638-3.996 5.849h3.983v10h-9.983z" /></svg>
+							<p class="text-xl leading-relaxed mb-6" style="color: {theme.text}">This product has completely transformed how we work. The attention to detail is remarkable.</p>
+							<div class="flex items-center gap-3">
+								<div class="w-10 h-10 rounded-full flex items-center justify-center text-sm font-bold" style="background: linear-gradient(135deg, {theme.accent}, {theme.secondary}); color: white">SM</div>
+								<div>
+									<div class="font-semibold" style="color: {theme.text}">Sarah Miller</div>
+									<div class="text-sm" style="color: {theme.muted}">CEO at TechCorp</div>
+								</div>
+							</div>
+						</button>
+						<!-- Bordered quote -->
+						<button onclick={() => handleColorClick(theme.secondary, 'Quote border')} class="rounded-xl p-6 border-l-4 hover:ring-2 hover:ring-blue-500 transition-all cursor-pointer text-left" style="background-color: {hexToRgba(theme.secondary, 0.05)}; border-color: {theme.secondary}">
+							<p class="text-lg mb-4" style="color: {theme.text}">"The best investment we've made this year. Highly recommended."</p>
+							<div class="text-sm font-medium" style="color: {theme.secondary}">— Alex Chen, Designer</div>
+						</button>
+						<!-- Simple quote -->
+						<button onclick={() => handleColorClick(theme.tertiary, 'Quote simple')} class="rounded-xl p-6 hover:ring-2 hover:ring-blue-500 transition-all cursor-pointer text-left" style="background-color: {hexToRgba(theme.tertiary, 0.1)}">
+							<div class="flex gap-1 mb-3">
+								{#each [1,2,3,4,5] as _}
+									<svg class="w-4 h-4" style="color: {theme.tertiary}" fill="currentColor" viewBox="0 0 24 24"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z" /></svg>
+								{/each}
+							</div>
+							<p class="text-lg mb-4" style="color: {theme.text}">"Five stars! Absolutely love it."</p>
+							<div class="text-sm" style="color: {theme.muted}">Mike R. - Verified Buyer</div>
+						</button>
+					</div>
+				</div>
+
+			{:else if slides[selectedSlideIndex].id === 'dividers'}
+				<!-- Dividers & Separators -->
+				<div class="w-full h-full flex flex-col p-12">
+					<button
+						onclick={() => handleColorClick(theme.text, 'Heading')}
+						class="text-3xl font-bold mb-8 hover:ring-2 hover:ring-blue-500 hover:ring-offset-4 rounded px-2 py-1 transition-all cursor-pointer self-start"
+						style="color: {theme.text}; --tw-ring-offset-color: {theme.background}"
+					>
+						Dividers & Separators
+					</button>
+					<div class="flex-1 flex flex-col gap-8">
+						<!-- Simple line -->
+						<div>
+							<div class="text-sm mb-4" style="color: {theme.muted}">Simple Line</div>
+							<button onclick={() => handleColorClick(theme.border, 'Divider')} class="w-full h-px hover:ring-2 hover:ring-blue-500 transition-all cursor-pointer" style="background-color: {theme.border}"></button>
+						</div>
+						<!-- With text -->
+						<div>
+							<div class="text-sm mb-4" style="color: {theme.muted}">With Text</div>
+							<button onclick={() => handleColorClick(theme.border, 'Divider with text')} class="flex items-center gap-4 hover:ring-2 hover:ring-blue-500 rounded-lg transition-all cursor-pointer p-2 -m-2 w-full">
+								<div class="flex-1 h-px" style="background-color: {theme.border}"></div>
+								<span class="text-sm" style="color: {theme.muted}">OR</span>
+								<div class="flex-1 h-px" style="background-color: {theme.border}"></div>
+							</button>
+						</div>
+						<!-- Gradient line -->
+						<div>
+							<div class="text-sm mb-4" style="color: {theme.muted}">Gradient</div>
+							<button onclick={() => handleColorClick(theme.accent, 'Gradient divider')} class="w-full h-0.5 rounded hover:ring-2 hover:ring-blue-500 transition-all cursor-pointer" style="background: linear-gradient(90deg, transparent, {theme.accent}, {theme.secondary}, transparent)"></button>
+						</div>
+						<!-- Dashed -->
+						<div>
+							<div class="text-sm mb-4" style="color: {theme.muted}">Dashed</div>
+							<button onclick={() => handleColorClick(theme.border, 'Dashed divider')} class="w-full border-t-2 border-dashed hover:ring-2 hover:ring-blue-500 transition-all cursor-pointer" style="border-color: {theme.border}"></button>
+						</div>
+						<!-- With icon -->
+						<div>
+							<div class="text-sm mb-4" style="color: {theme.muted}">With Icon</div>
+							<button onclick={() => handleColorClick(theme.accent, 'Divider with icon')} class="flex items-center gap-4 hover:ring-2 hover:ring-blue-500 rounded-lg transition-all cursor-pointer p-2 -m-2 w-full">
+								<div class="flex-1 h-px" style="background-color: {theme.border}"></div>
+								<div class="w-8 h-8 rounded-full flex items-center justify-center" style="background-color: {hexToRgba(theme.accent, 0.1)}">
+									<svg class="w-4 h-4" style="color: {theme.accent}" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 14l-7 7m0 0l-7-7m7 7V3" /></svg>
+								</div>
+								<div class="flex-1 h-px" style="background-color: {theme.border}"></div>
+							</button>
+						</div>
+						<!-- Decorative -->
+						<div>
+							<div class="text-sm mb-4" style="color: {theme.muted}">Decorative</div>
+							<button onclick={() => handleColorClick(theme.accent, 'Decorative divider')} class="flex items-center justify-center gap-2 hover:ring-2 hover:ring-blue-500 rounded-lg transition-all cursor-pointer p-2 -m-2 w-full">
+								<div class="w-2 h-2 rounded-full" style="background-color: {theme.accent}"></div>
+								<div class="w-1.5 h-1.5 rounded-full" style="background-color: {theme.secondary}"></div>
+								<div class="w-1 h-1 rounded-full" style="background-color: {theme.tertiary}"></div>
+								<div class="w-16 h-0.5 rounded" style="background-color: {theme.border}"></div>
+								<div class="w-1 h-1 rounded-full" style="background-color: {theme.tertiary}"></div>
+								<div class="w-1.5 h-1.5 rounded-full" style="background-color: {theme.secondary}"></div>
+								<div class="w-2 h-2 rounded-full" style="background-color: {theme.accent}"></div>
+							</button>
+						</div>
+					</div>
+				</div>
+
+			{:else if slides[selectedSlideIndex].id === 'highlights'}
+				<!-- Text Highlights -->
+				<div class="w-full h-full flex flex-col p-12">
+					<button
+						onclick={() => handleColorClick(theme.text, 'Heading')}
+						class="text-3xl font-bold mb-8 hover:ring-2 hover:ring-blue-500 hover:ring-offset-4 rounded px-2 py-1 transition-all cursor-pointer self-start"
+						style="color: {theme.text}; --tw-ring-offset-color: {theme.background}"
+					>
+						Text Highlights
+					</button>
+					<div class="flex-1 flex flex-col gap-8">
+						<!-- Background highlight -->
+						<div>
+							<div class="text-sm mb-3" style="color: {theme.muted}">Background Highlight</div>
+							<p class="text-xl" style="color: {theme.text}">
+								This is regular text with
+								<button onclick={() => handleColorClick(theme.accent, 'Highlight bg')} class="hover:ring-2 hover:ring-blue-500 rounded transition-all cursor-pointer px-1" style="background-color: {hexToRgba(theme.accent, 0.2)}; color: {theme.accent}">highlighted words</button>
+								in the middle.
+							</p>
+						</div>
+						<!-- Underline styles -->
+						<div>
+							<div class="text-sm mb-3" style="color: {theme.muted}">Underline Styles</div>
+							<div class="flex gap-8 text-xl">
+								<button onclick={() => handleColorClick(theme.accent, 'Solid underline')} class="hover:ring-2 hover:ring-blue-500 rounded transition-all cursor-pointer px-1 border-b-2" style="color: {theme.text}; border-color: {theme.accent}">Solid line</button>
+								<button onclick={() => handleColorClick(theme.secondary, 'Wavy underline')} class="hover:ring-2 hover:ring-blue-500 rounded transition-all cursor-pointer px-1" style="color: {theme.text}; text-decoration: underline wavy; text-decoration-color: {theme.secondary}">Wavy line</button>
+								<button onclick={() => handleColorClick(theme.tertiary, 'Dotted underline')} class="hover:ring-2 hover:ring-blue-500 rounded transition-all cursor-pointer px-1 border-b-2 border-dotted" style="color: {theme.text}; border-color: {theme.tertiary}">Dotted line</button>
+							</div>
+						</div>
+						<!-- Gradient text -->
+						<div>
+							<div class="text-sm mb-3" style="color: {theme.muted}">Gradient Text</div>
+							<button onclick={() => handleColorClick(theme.accent, 'Gradient text')} class="text-3xl font-bold hover:ring-2 hover:ring-blue-500 rounded transition-all cursor-pointer px-1 bg-clip-text text-transparent" style="background-image: linear-gradient(135deg, {theme.accent}, {theme.secondary}, {theme.tertiary})">Beautiful Gradient Text</button>
+						</div>
+						<!-- Marker style -->
+						<div>
+							<div class="text-sm mb-3" style="color: {theme.muted}">Marker / Strikethrough</div>
+							<p class="text-xl" style="color: {theme.text}">
+								<button onclick={() => handleColorClick(theme.accent, 'Marker highlight')} class="hover:ring-2 hover:ring-blue-500 rounded transition-all cursor-pointer relative inline-block px-1">
+									<span class="relative z-10">Important text</span>
+									<span class="absolute bottom-1 left-0 right-0 h-3 -z-0" style="background-color: {hexToRgba(theme.accent, 0.3)}"></span>
+								</button>
+								and
+								<button onclick={() => handleColorClick(theme.muted, 'Strikethrough')} class="hover:ring-2 hover:ring-blue-500 rounded transition-all cursor-pointer px-1 line-through" style="color: {theme.muted}">deleted text</button>
+							</p>
+						</div>
+						<!-- Inline code -->
+						<div>
+							<div class="text-sm mb-3" style="color: {theme.muted}">Inline Code / Kbd</div>
+							<p class="text-xl" style="color: {theme.text}">
+								Press
+								<button onclick={() => handleColorClick(theme.surface, 'Kbd style')} class="hover:ring-2 hover:ring-blue-500 transition-all cursor-pointer px-2 py-0.5 rounded text-sm font-mono border" style="background-color: {theme.surface}; color: {theme.text}; border-color: {theme.border}">⌘</button>
+								+
+								<button onclick={() => handleColorClick(theme.surface, 'Kbd style')} class="hover:ring-2 hover:ring-blue-500 transition-all cursor-pointer px-2 py-0.5 rounded text-sm font-mono border" style="background-color: {theme.surface}; color: {theme.text}; border-color: {theme.border}">K</button>
+								or use
+								<button onclick={() => handleColorClick(theme.accent, 'Code style')} class="hover:ring-2 hover:ring-blue-500 transition-all cursor-pointer px-2 py-0.5 rounded text-sm font-mono" style="background-color: {hexToRgba(theme.accent, 0.15)}; color: {theme.accent}">npm install</button>
+							</p>
+						</div>
 					</div>
 				</div>
 			{/if}
