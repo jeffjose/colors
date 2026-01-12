@@ -30,7 +30,7 @@
 	const sizePresets = [16, 24, 32, 48, 64, 96, 128, 256, 512];
 
 	// Quick colors from Radix palette - all colors, key shades
-	const quickColors = $derived(() => {
+	const quickColors = $derived.by(() => {
 		const colors: { name: string; hex: string }[] = [];
 		const shadeIndices = [4, 8]; // medium and dark
 		for (const group of radixPalette.groups) {
@@ -458,7 +458,7 @@
 							Quick Colors
 						</div>
 						<div class="grid grid-cols-8 gap-0.5">
-							{#each quickColors() as color}
+							{#each quickColors as color}
 								<button
 									onclick={() => handleQuickColor(color.hex)}
 									class="w-full aspect-square rounded hover:scale-110 hover:z-10 transition-transform"
