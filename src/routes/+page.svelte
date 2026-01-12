@@ -1,7 +1,7 @@
 <script lang="ts">
-	import { allPalettes, radixPalette, type Palette, type ColorShade } from '$lib/palettes';
+	import { allPalettes, radixPalette, type Palette } from '$lib/palettes';
 	import { getContrastColor, copyToClipboard } from '$lib/utils';
-	import { Select, Separator } from 'bits-ui';
+	import { Select } from 'bits-ui';
 
 	let selectedPalette = $state<Palette>(radixPalette);
 	let copiedColor = $state<string | null>(null);
@@ -42,6 +42,34 @@
 
 	// Get the display color for the sidebar (hovered takes priority over selected)
 	let displayColor = $derived(hoveredColor || selectedColor);
+
+	// Derived color values for sidebar
+	let colorRGB = $derived.by(() => {
+		if (!displayColor) return null;
+		return {
+			r: parseInt(displayColor.hex.slice(1, 3), 16),
+			g: parseInt(displayColor.hex.slice(3, 5), 16),
+			b: parseInt(displayColor.hex.slice(5, 7), 16)
+		};
+	});
+
+	let colorHSL = $derived.by(() => {
+		if (!colorRGB) return null;
+		const r = colorRGB.r / 255;
+		const g = colorRGB.g / 255;
+		const b = colorRGB.b / 255;
+		const max = Math.max(r, g, b);
+		const min = Math.min(r, g, b);
+		const l = (max + min) / 2;
+		const s = max === min ? 0 : l > 0.5 ? (max - min) / (2 - max - min) : (max - min) / (max + min);
+		let h = 0;
+		if (max !== min) {
+			if (max === r) h = ((g - b) / (max - min) + (g < b ? 6 : 0)) * 60;
+			else if (max === g) h = ((b - r) / (max - min) + 2) * 60;
+			else h = ((r - g) / (max - min) + 4) * 60;
+		}
+		return { h: Math.round(h), s: Math.round(s * 100), l: Math.round(l * 100) };
+	});
 </script>
 
 <svelte:head>
@@ -242,27 +270,20 @@
 								</div>
 
 								<!-- RGB -->
-								<div>
-									<label class="text-[10px] font-medium text-zinc-500 uppercase tracking-wider">RGB</label>
-									{@const r = parseInt(displayColor.hex.slice(1, 3), 16)}
-									{@const g = parseInt(displayColor.hex.slice(3, 5), 16)}
-									{@const b = parseInt(displayColor.hex.slice(5, 7), 16)}
-									<div class="text-sm text-zinc-200 font-mono mt-0.5">{r}, {g}, {b}</div>
-								</div>
+								{#if colorRGB}
+									<div>
+										<label class="text-[10px] font-medium text-zinc-500 uppercase tracking-wider">RGB</label>
+										<div class="text-sm text-zinc-200 font-mono mt-0.5">{colorRGB.r}, {colorRGB.g}, {colorRGB.b}</div>
+									</div>
+								{/if}
 
 								<!-- HSL -->
-								<div>
-									<label class="text-[10px] font-medium text-zinc-500 uppercase tracking-wider">HSL</label>
-									{@const r = parseInt(displayColor.hex.slice(1, 3), 16) / 255}
-									{@const g = parseInt(displayColor.hex.slice(3, 5), 16) / 255}
-									{@const b = parseInt(displayColor.hex.slice(5, 7), 16) / 255}
-									{@const max = Math.max(r, g, b)}
-									{@const min = Math.min(r, g, b)}
-									{@const l = (max + min) / 2}
-									{@const s = max === min ? 0 : l > 0.5 ? (max - min) / (2 - max - min) : (max - min) / (max + min)}
-									{@const h = max === min ? 0 : max === r ? ((g - b) / (max - min) + (g < b ? 6 : 0)) * 60 : max === g ? ((b - r) / (max - min) + 2) * 60 : ((r - g) / (max - min) + 4) * 60}
-									<div class="text-sm text-zinc-200 font-mono mt-0.5">{Math.round(h)}, {Math.round(s * 100)}%, {Math.round(l * 100)}%</div>
-								</div>
+								{#if colorHSL}
+									<div>
+										<label class="text-[10px] font-medium text-zinc-500 uppercase tracking-wider">HSL</label>
+										<div class="text-sm text-zinc-200 font-mono mt-0.5">{colorHSL.h}, {colorHSL.s}%, {colorHSL.l}%</div>
+									</div>
+								{/if}
 							</div>
 						</div>
 					{:else}
