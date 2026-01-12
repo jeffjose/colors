@@ -94,6 +94,22 @@
 		}
 	}
 
+	async function handleCopyPng() {
+		if (!processedSvg) return;
+		try {
+			const dataUrl = await svgToPng(processedSvg, iconSize);
+			// Convert data URL to blob
+			const response = await fetch(dataUrl);
+			const blob = await response.blob();
+			await navigator.clipboard.write([
+				new ClipboardItem({ 'image/png': blob })
+			]);
+			showToast('PNG copied');
+		} catch {
+			showToast('Failed to copy PNG');
+		}
+	}
+
 	async function handleDownloadPng() {
 		if (!processedSvg) return;
 		try {
@@ -103,13 +119,17 @@
 		} catch {
 			showToast('Failed to export PNG');
 		}
+		pngMenuOpen = false;
 	}
+
+	let pngMenuOpen = $state(false);
 
 	function handleQuickColor(hex: string) {
 		solidColor = hex;
 		if (fillMode !== 'solid') {
 			fillMode = 'solid';
 		}
+		showToast(`Color: ${hex}`);
 	}
 
 	// Handle keyboard paste (Ctrl+V / Cmd+V)
@@ -224,23 +244,48 @@
 			Copy SVG
 		</button>
 
-		<button
-			onclick={handleDownloadPng}
-			disabled={!processedSvg}
-			class="inline-flex items-center gap-1.5 px-2.5 py-1.5 h-7 rounded-md text-xs font-medium transition-colors {processedSvg
-				? 'bg-zinc-800 text-zinc-200 hover:bg-zinc-700'
-				: 'bg-zinc-800/50 text-zinc-600 cursor-not-allowed'}"
-		>
-			<svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-				<path
-					stroke-linecap="round"
-					stroke-linejoin="round"
-					stroke-width="2"
-					d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4"
-				/>
-			</svg>
-			PNG
-		</button>
+		<div class="relative">
+			<div class="flex">
+				<button
+					onclick={handleCopyPng}
+					disabled={!processedSvg}
+					class="inline-flex items-center gap-1.5 pl-2.5 pr-2 py-1.5 h-7 rounded-l-md text-xs font-medium transition-colors {processedSvg
+						? 'bg-zinc-800 text-zinc-200 hover:bg-zinc-700'
+						: 'bg-zinc-800/50 text-zinc-600 cursor-not-allowed'}"
+				>
+					<svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+						<path
+							stroke-linecap="round"
+							stroke-linejoin="round"
+							stroke-width="2"
+							d="M8 16H6a2 2 0 01-2-2V6a2 2 0 012-2h8a2 2 0 012 2v2m-6 12h8a2 2 0 002-2v-8a2 2 0 00-2-2h-8a2 2 0 00-2 2v8a2 2 0 002 2z"
+						/>
+					</svg>
+					PNG
+				</button>
+				<button
+					onclick={() => (pngMenuOpen = !pngMenuOpen)}
+					disabled={!processedSvg}
+					class="inline-flex items-center px-1.5 py-1.5 h-7 rounded-r-md border-l border-zinc-700 text-xs font-medium transition-colors {processedSvg
+						? 'bg-zinc-800 text-zinc-200 hover:bg-zinc-700'
+						: 'bg-zinc-800/50 text-zinc-600 cursor-not-allowed'}"
+				>
+					<svg class="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+						<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7" />
+					</svg>
+				</button>
+			</div>
+			{#if pngMenuOpen}
+				<div class="absolute right-0 top-full mt-1 py-1 bg-zinc-800 border border-zinc-700 rounded-md shadow-xl z-50 min-w-[120px]">
+					<button
+						onclick={handleDownloadPng}
+						class="w-full px-3 py-1.5 text-left text-xs text-zinc-300 hover:bg-zinc-700 transition-colors"
+					>
+						Download PNG
+					</button>
+				</div>
+			{/if}
+		</div>
 
 		<div class="w-px h-5 bg-zinc-700"></div>
 
