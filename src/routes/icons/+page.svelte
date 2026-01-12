@@ -1,7 +1,7 @@
 <script lang="ts">
 	import { Select } from 'bits-ui';
 	import { copyToClipboard } from '$lib/utils';
-	import { radixPalette } from '$lib/palettes';
+	import { allPalettes, radixPalette, type Palette } from '$lib/palettes';
 	import {
 		parseSvgContent,
 		applySolidColor,
@@ -29,19 +29,12 @@
 	// Size presets
 	const sizePresets = [16, 24, 32, 48, 64, 96, 128, 256, 512];
 
-	// Quick colors from Radix palette - all colors, key shades
-	const quickColors = $derived.by(() => {
-		const colors: { name: string; hex: string }[] = [];
-		const shadeIndices = [4, 8]; // medium and dark
-		for (const group of radixPalette.groups) {
-			for (const idx of shadeIndices) {
-				const color = group.colors[idx];
-				if (color) {
-					colors.push({ name: `${group.name} ${color.shade}`, hex: color.hex });
-				}
-			}
-		}
-		return colors;
+	// All colors from selected palette organized by group
+	const paletteColors = $derived.by(() => {
+		return colorPalette.groups.map((group) => ({
+			name: group.name,
+			colors: group.colors.map((c) => ({ shade: c.shade, hex: c.hex }))
+		}));
 	});
 
 	// Processed SVG with all modifications applied
@@ -123,6 +116,33 @@
 	}
 
 	let pngMenuOpen = $state(false);
+	let colorPalette = $state<Palette>(radixPalette);
+	let colorPickerTab = $state<'solid' | 'gradient'>('solid');
+
+	// Preset gradients
+	const presetGradients = [
+		{ name: 'Sunset', start: '#f97316', end: '#ec4899', angle: 135 },
+		{ name: 'Ocean', start: '#06b6d4', end: '#3b82f6', angle: 135 },
+		{ name: 'Forest', start: '#22c55e', end: '#14b8a6', angle: 135 },
+		{ name: 'Purple Haze', start: '#8b5cf6', end: '#ec4899', angle: 135 },
+		{ name: 'Fire', start: '#ef4444', end: '#f97316', angle: 180 },
+		{ name: 'Ice', start: '#67e8f9', end: '#a5b4fc', angle: 180 },
+		{ name: 'Midnight', start: '#1e3a8a', end: '#7c3aed', angle: 135 },
+		{ name: 'Gold', start: '#fbbf24', end: '#f97316', angle: 135 },
+		{ name: 'Rose', start: '#fb7185', end: '#f472b6', angle: 135 },
+		{ name: 'Lime', start: '#84cc16', end: '#22c55e', angle: 135 },
+		{ name: 'Sky', start: '#38bdf8', end: '#818cf8', angle: 135 },
+		{ name: 'Ember', start: '#dc2626', end: '#7c2d12', angle: 180 },
+	];
+
+	function applyPresetGradient(preset: typeof presetGradients[0]) {
+		gradientStart = preset.start;
+		gradientEnd = preset.end;
+		gradientAngle = preset.angle;
+		gradientType = 'linear';
+		fillMode = 'gradient';
+		showToast(preset.name);
+	}
 
 	function handleQuickColor(hex: string) {
 		solidColor = hex;
@@ -498,21 +518,68 @@
 
 					<div class="h-px bg-zinc-800"></div>
 
-					<!-- Quick Colors -->
+					<!-- Color Picker with Tabs -->
 					<div>
-						<div class="text-[10px] font-medium text-zinc-500 uppercase tracking-wider mb-2">
-							Quick Colors
+						<div class="flex gap-1 mb-3">
+							<button
+								onclick={() => (colorPickerTab = 'solid')}
+								class="flex-1 h-6 rounded text-[10px] font-medium transition-colors {colorPickerTab === 'solid'
+									? 'bg-zinc-700 text-zinc-100'
+									: 'text-zinc-500 hover:text-zinc-300'}"
+							>
+								Solid
+							</button>
+							<button
+								onclick={() => (colorPickerTab = 'gradient')}
+								class="flex-1 h-6 rounded text-[10px] font-medium transition-colors {colorPickerTab === 'gradient'
+									? 'bg-zinc-700 text-zinc-100'
+									: 'text-zinc-500 hover:text-zinc-300'}"
+							>
+								Gradients
+							</button>
 						</div>
-						<div class="grid grid-cols-8 gap-0.5">
-							{#each quickColors as color}
-								<button
-									onclick={() => handleQuickColor(color.hex)}
-									class="w-full aspect-square rounded hover:scale-110 hover:z-10 transition-transform"
-									style="background-color: {color.hex}"
-									title={color.name}
-								></button>
-							{/each}
-						</div>
+
+						{#if colorPickerTab === 'solid'}
+							<!-- Palette Selector -->
+							<div class="mb-2">
+								<select
+									bind:value={colorPalette}
+									class="w-full h-6 px-2 rounded bg-zinc-800 border border-zinc-700 text-[10px] text-zinc-300 focus:outline-none focus:ring-1 focus:ring-zinc-600"
+								>
+									{#each allPalettes as palette}
+										<option value={palette}>{palette.name}</option>
+									{/each}
+								</select>
+							</div>
+
+							<!-- Color Grid -->
+							<div class="max-h-48 overflow-y-auto rounded bg-zinc-800/50 p-1">
+								{#each paletteColors as group}
+									<div class="flex gap-px mb-px">
+										{#each group.colors as color}
+											<button
+												onclick={() => handleQuickColor(color.hex)}
+												class="flex-1 h-4 hover:scale-y-150 hover:z-10 transition-transform first:rounded-l last:rounded-r"
+												style="background-color: {color.hex}"
+												title="{group.name} {color.shade}"
+											></button>
+										{/each}
+									</div>
+								{/each}
+							</div>
+						{:else}
+							<!-- Gradient Presets -->
+							<div class="grid grid-cols-3 gap-1">
+								{#each presetGradients as preset}
+									<button
+										onclick={() => applyPresetGradient(preset)}
+										class="h-8 rounded hover:scale-105 hover:z-10 transition-transform"
+										style="background: linear-gradient({preset.angle}deg, {preset.start}, {preset.end})"
+										title={preset.name}
+									></button>
+								{/each}
+							</div>
+						{/if}
 					</div>
 				</div>
 			</div>
