@@ -13,7 +13,7 @@
 
 	// State
 	let svgContent = $state<string>('');
-	let iconSize = $state<number>(256);
+	let iconSize = $state<number>(512);
 	let fillMode = $state<'solid' | 'gradient'>('solid');
 	let solidColor = $state<string>('#000000');
 	let gradientType = $state<'linear' | 'radial'>('linear');
