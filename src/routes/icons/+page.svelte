@@ -106,8 +106,9 @@
 	}
 
 	function handleQuickColor(hex: string) {
-		if (fillMode === 'solid') {
-			solidColor = hex;
+		solidColor = hex;
+		if (fillMode !== 'solid') {
+			fillMode = 'solid';
 		}
 	}
 
