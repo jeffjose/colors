@@ -1,12 +1,12 @@
 <script lang="ts">
-	import { allPalettes, type Palette } from '$lib/palettes';
+	import { allPalettes, radixPalette, type Palette } from '$lib/palettes';
 	import { getContrastColor, copyToClipboard } from '$lib/utils';
+	import { Select } from 'bits-ui';
 
-	let selectedPalette = $state<Palette>(allPalettes[0]);
+	let selectedPalette = $state<Palette>(radixPalette);
 	let copiedColor = $state<string | null>(null);
 	let copiedName = $state<string>('');
 	let toastTimeout: ReturnType<typeof setTimeout>;
-	let dropdownOpen = $state(false);
 
 	function getMaxShades(palette: Palette): number {
 		return Math.max(...palette.groups.map((g) => g.colors.length));
@@ -23,11 +23,6 @@
 			}, 1500);
 		}
 	}
-
-	function selectPalette(palette: Palette) {
-		selectedPalette = palette;
-		dropdownOpen = false;
-	}
 </script>
 
 <svelte:head>
@@ -41,38 +36,49 @@
 			<h1 class="text-white font-semibold">Colors</h1>
 
 			<!-- Dropdown -->
-			<div class="relative">
-				<button
-					onclick={() => (dropdownOpen = !dropdownOpen)}
-					class="flex items-center gap-2 px-3 py-1.5 rounded bg-slate-800 hover:bg-slate-700 text-slate-200 text-sm transition-colors"
+			<Select.Root
+				type="single"
+				value={selectedPalette.name}
+				onValueChange={(value) => {
+					const palette = allPalettes.find(p => p.name === value);
+					if (palette) selectedPalette = palette;
+				}}
+			>
+				<Select.Trigger
+					class="inline-flex items-center justify-between gap-2 px-3 py-1.5 h-9 min-w-[140px] rounded-md border border-slate-700 bg-slate-800 text-sm text-slate-200 ring-offset-slate-950 placeholder:text-slate-400 hover:bg-slate-700 focus:outline-none focus:ring-2 focus:ring-slate-400 focus:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50 transition-colors"
 				>
 					<span>{selectedPalette.name}</span>
-					<svg class="w-4 h-4 text-slate-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-						<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7" />
+					<svg class="w-4 h-4 text-slate-400 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+						<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 9l4-4 4 4m0 6l-4 4-4-4" />
 					</svg>
-				</button>
-
-				{#if dropdownOpen}
-					<!-- Backdrop -->
-					<button
-						class="fixed inset-0 z-10"
-						onclick={() => (dropdownOpen = false)}
-						aria-label="Close dropdown"
-					></button>
-
-					<!-- Menu -->
-					<div class="absolute top-full left-0 mt-1 bg-slate-800 border border-slate-700 rounded-lg shadow-xl z-20 min-w-[160px] py-1">
-						{#each allPalettes as palette}
-							<button
-								onclick={() => selectPalette(palette)}
-								class="w-full text-left px-3 py-2 text-sm hover:bg-slate-700 transition-colors {selectedPalette.name === palette.name ? 'text-white bg-slate-700' : 'text-slate-300'}"
-							>
-								{palette.name}
-							</button>
-						{/each}
-					</div>
-				{/if}
-			</div>
+				</Select.Trigger>
+				<Select.Portal>
+					<Select.Content
+						class="relative z-50 max-h-96 min-w-[140px] overflow-hidden rounded-md border border-slate-700 bg-slate-800 text-slate-200 shadow-lg"
+						sideOffset={4}
+					>
+						<Select.Viewport class="p-1">
+							{#each allPalettes as palette}
+								<Select.Item
+									value={palette.name}
+									class="relative flex w-full cursor-pointer select-none items-center rounded-sm py-1.5 pl-8 pr-2 text-sm outline-none hover:bg-slate-700 focus:bg-slate-700 data-[highlighted]:bg-slate-700 data-[disabled]:pointer-events-none data-[disabled]:opacity-50"
+								>
+									{#snippet children({ selected })}
+										{#if selected}
+											<span class="absolute left-2 flex h-3.5 w-3.5 items-center justify-center">
+												<svg class="h-4 w-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+													<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7" />
+												</svg>
+											</span>
+										{/if}
+										{palette.name}
+									{/snippet}
+								</Select.Item>
+							{/each}
+						</Select.Viewport>
+					</Select.Content>
+				</Select.Portal>
+			</Select.Root>
 		</div>
 
 		<div class="ml-auto text-slate-500 text-xs">
