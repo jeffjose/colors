@@ -29,13 +29,20 @@
 	// Size presets
 	const sizePresets = [16, 24, 32, 48, 64, 96, 128, 256, 512];
 
-	// Quick colors from Radix palette
-	const quickColors = $derived(
-		radixPalette.groups.slice(0, 12).map((g) => ({
-			name: g.name,
-			hex: g.colors[8]?.hex || g.colors[Math.floor(g.colors.length / 2)]?.hex || '#000000'
-		}))
-	);
+	// Quick colors from Radix palette - all colors, key shades
+	const quickColors = $derived(() => {
+		const colors: { name: string; hex: string }[] = [];
+		const shadeIndices = [4, 8]; // medium and dark
+		for (const group of radixPalette.groups) {
+			for (const idx of shadeIndices) {
+				const color = group.colors[idx];
+				if (color) {
+					colors.push({ name: `${group.name} ${color.shade}`, hex: color.hex });
+				}
+			}
+		}
+		return colors;
+	});
 
 	// Processed SVG with all modifications applied
 	let processedSvg = $derived.by(() => {
@@ -450,11 +457,11 @@
 						<div class="text-[10px] font-medium text-zinc-500 uppercase tracking-wider mb-2">
 							Quick Colors
 						</div>
-						<div class="grid grid-cols-6 gap-1">
-							{#each quickColors as color}
+						<div class="grid grid-cols-8 gap-0.5">
+							{#each quickColors() as color}
 								<button
 									onclick={() => handleQuickColor(color.hex)}
-									class="w-full aspect-square rounded-md border border-zinc-700 hover:scale-110 transition-transform"
+									class="w-full aspect-square rounded hover:scale-110 hover:z-10 transition-transform"
 									style="background-color: {color.hex}"
 									title={color.name}
 								></button>
