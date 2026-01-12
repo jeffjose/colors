@@ -313,10 +313,10 @@
 						</svg>
 						Paste from Clipboard
 					</button>
-					<div class="flex items-center justify-center gap-2 mt-4 text-zinc-600 text-xs">
+					<div class="flex items-center justify-center gap-1.5 mt-2 text-zinc-600 text-xs">
 						<span>or press</span>
-						<kbd class="inline-flex items-center gap-1 px-2 py-1 rounded bg-zinc-800/80 border border-zinc-700 text-zinc-400 text-[11px] font-mono tracking-wide">
-							<svg class="w-3 h-3" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+						<kbd class="inline-flex items-center gap-0.5 px-1 py-0.5 rounded bg-zinc-800/80 border border-zinc-700 text-zinc-400 text-[10px] font-mono">
+							<svg class="w-2.5 h-2.5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
 								<path d="M18 3a3 3 0 0 0-3 3v12a3 3 0 0 0 3 3 3 3 0 0 0 3-3 3 3 0 0 0-3-3H6a3 3 0 0 0-3 3 3 3 0 0 0 3 3 3 3 0 0 0 3-3V6a3 3 0 0 0-3-3 3 3 0 0 0-3 3 3 3 0 0 0 3 3h12a3 3 0 0 0 3-3 3 3 0 0 0-3-3z"/>
 							</svg>
 							V
