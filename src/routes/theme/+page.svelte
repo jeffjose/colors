@@ -65,65 +65,22 @@
 
 <!-- Content Area -->
 <div class="flex-1 flex min-h-0">
-	<!-- Slide Thumbnails Sidebar -->
-	<aside class="w-48 bg-zinc-900 border-r border-zinc-800 flex flex-col shrink-0">
+	<!-- Slides Sidebar (Figma layers style) -->
+	<aside class="w-44 bg-zinc-900 border-r border-zinc-800 flex flex-col shrink-0">
 		<div class="h-10 px-3 flex items-center border-b border-zinc-800">
 			<span class="text-xs font-medium text-zinc-400">Slides</span>
 		</div>
-		<div class="flex-1 overflow-y-auto p-2 space-y-2">
+		<div class="flex-1 overflow-y-auto py-1">
 			{#each slides as slide, index}
 				<button
 					onclick={() => (selectedSlideIndex = index)}
-					class="w-full aspect-[16/10] rounded-lg border-2 transition-all overflow-hidden {selectedSlideIndex === index ? 'border-blue-500 ring-2 ring-blue-500/20' : 'border-zinc-700 hover:border-zinc-600'}"
+					class="w-full flex items-center gap-2 px-3 py-1.5 text-left transition-colors {selectedSlideIndex === index ? 'bg-zinc-800 text-zinc-100' : 'text-zinc-400 hover:bg-zinc-800/50 hover:text-zinc-300'}"
 				>
-					<!-- Mini slide preview -->
-					<div class="w-full h-full p-2" style="background-color: {theme.background}">
-						{#if slide.id === 'title'}
-							<div class="h-full flex flex-col items-center justify-center">
-								<div class="w-3/4 h-2 rounded" style="background-color: {theme.text}"></div>
-								<div class="w-1/2 h-1 rounded mt-1" style="background-color: {theme.muted}"></div>
-							</div>
-						{:else if slide.id === 'content'}
-							<div class="h-full flex flex-col">
-								<div class="w-2/3 h-1.5 rounded mb-2" style="background-color: {theme.text}"></div>
-								<div class="space-y-1">
-									<div class="w-full h-1 rounded" style="background-color: {theme.muted}"></div>
-									<div class="w-5/6 h-1 rounded" style="background-color: {theme.muted}"></div>
-									<div class="w-4/6 h-1 rounded" style="background-color: {theme.muted}"></div>
-								</div>
-							</div>
-						{:else if slide.id === 'two-column'}
-							<div class="h-full flex flex-col">
-								<div class="w-1/2 h-1.5 rounded mb-2" style="background-color: {theme.text}"></div>
-								<div class="flex-1 flex gap-1">
-									<div class="flex-1 rounded" style="background-color: {theme.surface}"></div>
-									<div class="flex-1 rounded" style="background-color: {theme.surface}"></div>
-								</div>
-							</div>
-						{:else if slide.id === 'boxes'}
-							<div class="h-full flex flex-col">
-								<div class="w-1/2 h-1.5 rounded mb-2" style="background-color: {theme.text}"></div>
-								<div class="flex-1 grid grid-cols-3 gap-1">
-									<div class="rounded" style="background-color: {theme.accent}"></div>
-									<div class="rounded" style="background-color: {theme.accent}"></div>
-									<div class="rounded" style="background-color: {theme.accent}"></div>
-								</div>
-							</div>
-						{:else if slide.id === 'flow'}
-							<div class="h-full flex flex-col">
-								<div class="w-1/2 h-1.5 rounded mb-2" style="background-color: {theme.text}"></div>
-								<div class="flex-1 flex items-center justify-center gap-1">
-									<div class="w-4 h-4 rounded" style="background-color: {theme.accent}"></div>
-									<div class="w-2 h-0.5" style="background-color: {theme.muted}"></div>
-									<div class="w-4 h-4 rounded" style="background-color: {theme.accent}"></div>
-									<div class="w-2 h-0.5" style="background-color: {theme.muted}"></div>
-									<div class="w-4 h-4 rounded" style="background-color: {theme.accent}"></div>
-								</div>
-							</div>
-						{/if}
-					</div>
+					<svg class="w-4 h-4 shrink-0 {selectedSlideIndex === index ? 'text-blue-400' : 'text-zinc-500'}" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+						<path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M4 5a1 1 0 011-1h14a1 1 0 011 1v14a1 1 0 01-1 1H5a1 1 0 01-1-1V5z" />
+					</svg>
+					<span class="text-xs truncate">{slide.name}</span>
 				</button>
-				<div class="text-[10px] text-zinc-500 text-center -mt-1">{slide.name}</div>
 			{/each}
 		</div>
 	</aside>
