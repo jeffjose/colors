@@ -151,16 +151,17 @@
 <!-- Content Area -->
 <div class="flex-1 flex min-h-0">
 	<!-- Slides Sidebar -->
-	<aside class="w-40 bg-zinc-950 border-r border-zinc-800/50 flex flex-col shrink-0">
-		<div class="h-9 px-2.5 flex items-center border-b border-zinc-800/50">
-			<span class="text-[10px] font-medium text-zinc-500 uppercase tracking-wider">Slides</span>
+	<aside class="w-48 bg-zinc-900 border-r border-zinc-800 flex flex-col shrink-0">
+		<div class="h-10 px-3 flex items-center border-b border-zinc-800">
+			<span class="text-xs font-medium text-zinc-400">Slides</span>
+			<span class="ml-auto text-[10px] text-zinc-600">{slides.length}</span>
 		</div>
-		<div class="flex-1 overflow-y-auto py-0.5">
+		<div class="flex-1 overflow-y-auto py-1 sidebar-scroll">
 			{#each slideCategories as category}
 				{@const categorySlides = slides.slice(category.range[0], category.range[1])}
 				{@const isExpanded = expandedCategories.has(category.name)}
 				{@const hasSelectedSlide = selectedSlideIndex >= category.range[0] && selectedSlideIndex < category.range[1]}
-				<div>
+				<div class="mb-0.5">
 					<!-- Category Header -->
 					<button
 						onclick={() => {
@@ -172,24 +173,27 @@
 							}
 							expandedCategories = newSet;
 						}}
-						class="w-full flex items-center gap-1 px-2.5 py-1 text-left transition-colors hover:bg-zinc-900 {hasSelectedSlide ? 'text-zinc-300' : 'text-zinc-600'}"
+						class="w-full flex items-center gap-1.5 px-2 py-1.5 text-left transition-colors hover:bg-zinc-800/50 {hasSelectedSlide ? 'text-zinc-200' : 'text-zinc-500'}"
 					>
-						<svg class="w-2.5 h-2.5 shrink-0 transition-transform duration-150 {isExpanded ? 'rotate-90' : ''}" fill="currentColor" viewBox="0 0 20 20">
-							<path fill-rule="evenodd" d="M7.293 14.707a1 1 0 010-1.414L10.586 10 7.293 6.707a1 1 0 011.414-1.414l4 4a1 1 0 010 1.414l-4 4a1 1 0 01-1.414 0z" clip-rule="evenodd" />
+						<svg class="w-3 h-3 shrink-0 transition-transform {isExpanded ? 'rotate-90' : ''}" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+							<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7" />
 						</svg>
-						<span class="text-[10px] font-medium">{category.name}</span>
+						<span class="text-[11px] font-medium">{category.name}</span>
+						<span class="ml-auto text-[10px] text-zinc-600">{categorySlides.length}</span>
 					</button>
 					<!-- Category Items -->
 					{#if isExpanded}
-						<div class="pb-0.5">
+						<div class="ml-2">
 							{#each categorySlides as slide, i}
 								{@const globalIndex = category.range[0] + i}
 								<button
 									onclick={() => (selectedSlideIndex = globalIndex)}
-									class="w-full flex items-center gap-1.5 pl-5 pr-2 py-0.5 text-left transition-colors {selectedSlideIndex === globalIndex ? 'bg-zinc-800/80 text-zinc-200' : 'text-zinc-600 hover:bg-zinc-900 hover:text-zinc-500'}"
+									class="w-full flex items-center gap-2 pl-3 pr-2 py-1 text-left transition-colors {selectedSlideIndex === globalIndex ? 'bg-zinc-800 text-zinc-100' : 'text-zinc-500 hover:bg-zinc-800/50 hover:text-zinc-400'}"
 								>
-									<span class="w-1 h-1 rounded-full shrink-0 {selectedSlideIndex === globalIndex ? 'bg-blue-500' : 'bg-zinc-700'}"></span>
-									<span class="text-[10px] truncate">{slide.name.split(' - ')[1] || slide.name}</span>
+									<svg class="w-3.5 h-3.5 shrink-0 {selectedSlideIndex === globalIndex ? 'text-blue-400' : 'text-zinc-600'}" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+										<path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M4 5a1 1 0 011-1h14a1 1 0 011 1v14a1 1 0 01-1 1H5a1 1 0 01-1-1V5z" />
+									</svg>
+									<span class="text-[11px] truncate">{slide.name.split(' - ')[1] || slide.name}</span>
 								</button>
 							{/each}
 						</div>
@@ -1227,3 +1231,23 @@
 		<span class="text-zinc-500 uppercase">{copiedColor}</span>
 	</div>
 {/if}
+
+<style>
+	.sidebar-scroll {
+		scrollbar-width: thin;
+		scrollbar-color: #3f3f46 transparent;
+	}
+	.sidebar-scroll::-webkit-scrollbar {
+		width: 4px;
+	}
+	.sidebar-scroll::-webkit-scrollbar-track {
+		background: transparent;
+	}
+	.sidebar-scroll::-webkit-scrollbar-thumb {
+		background-color: #3f3f46;
+		border-radius: 2px;
+	}
+	.sidebar-scroll::-webkit-scrollbar-thumb:hover {
+		background-color: #52525b;
+	}
+</style>
