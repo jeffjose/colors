@@ -1,6 +1,284 @@
 <script lang="ts">
 	import { getContrastColor, copyToClipboard } from '$lib/utils';
 
+	// Helper to check if color is dark (needed early for palette generation)
+	function isColorDark(hex: string): boolean {
+		const r = parseInt(hex.slice(1, 3), 16);
+		const g = parseInt(hex.slice(3, 5), 16);
+		const b = parseInt(hex.slice(5, 7), 16);
+		const luminance = (0.299 * r + 0.587 * g + 0.114 * b) / 255;
+		return luminance < 0.5;
+	}
+
+	// Base colors to choose from (the starting point for theme generation)
+	const baseColors = [
+		{ hex: '#ef4444', name: 'Red' },
+		{ hex: '#f97316', name: 'Orange' },
+		{ hex: '#f59e0b', name: 'Amber' },
+		{ hex: '#eab308', name: 'Yellow' },
+		{ hex: '#84cc16', name: 'Lime' },
+		{ hex: '#22c55e', name: 'Green' },
+		{ hex: '#10b981', name: 'Emerald' },
+		{ hex: '#14b8a6', name: 'Teal' },
+		{ hex: '#06b6d4', name: 'Cyan' },
+		{ hex: '#0ea5e9', name: 'Sky' },
+		{ hex: '#3b82f6', name: 'Blue' },
+		{ hex: '#6366f1', name: 'Indigo' },
+		{ hex: '#8b5cf6', name: 'Violet' },
+		{ hex: '#a855f7', name: 'Purple' },
+		{ hex: '#d946ef', name: 'Fuchsia' },
+		{ hex: '#ec4899', name: 'Pink' },
+		{ hex: '#f43f5e', name: 'Rose' },
+		{ hex: '#64748b', name: 'Slate' },
+	];
+
+	// Generate a full theme from a single base color
+	function generateThemeFromBase(baseHex: string) {
+		// Convert hex to HSL for manipulation
+		const hsl = hexToHsl(baseHex);
+
+		// Create a dark background with a subtle tint of the base color
+		const bgHsl = { h: hsl.h, s: Math.min(hsl.s * 0.3, 15), l: 5 };
+		const surfaceHsl = { h: hsl.h, s: Math.min(hsl.s * 0.25, 12), l: 10 };
+		const borderHsl = { h: hsl.h, s: Math.min(hsl.s * 0.2, 10), l: 20 };
+
+		// Generate complementary and analogous colors
+		const secondaryHue = (hsl.h + 60) % 360;  // Analogous
+		const tertiaryHue = (hsl.h + 180) % 360;  // Complementary
+
+		// Generate solid color set - spread across the color wheel with base as anchor
+		const solidHues = [
+			hsl.h,
+			(hsl.h + 40) % 360,
+			(hsl.h + 120) % 360,
+			(hsl.h + 180) % 360,
+			(hsl.h + 240) % 360,
+			(hsl.h + 300) % 360,
+		];
+
+		const solids = solidHues.map(h => hslToHex({ h, s: Math.max(hsl.s, 70), l: 55 }));
+
+		// Accent text based on brightness
+		const accentText = hsl.l < 55 ? '#ffffff' : '#000000';
+
+		theme = {
+			background: hslToHex(bgHsl),
+			text: '#fafafa',
+			muted: lightenColor(baseHex, 0.4),
+			accent: baseHex,
+			accentText: accentText,
+			border: hslToHex(borderHsl),
+			surface: hslToHex(surfaceHsl),
+			accentMuted: baseHex,
+			accentBorder: baseHex,
+			accentGlow: baseHex,
+			secondary: hslToHex({ h: secondaryHue, s: hsl.s, l: hsl.l }),
+			tertiary: hslToHex({ h: tertiaryHue, s: Math.max(hsl.s - 10, 50), l: Math.min(hsl.l + 5, 60) }),
+			solids: solids,
+		};
+	}
+
+	// HSL conversion helpers
+	function hexToHsl(hex: string): { h: number; s: number; l: number } {
+		const r = parseInt(hex.slice(1, 3), 16) / 255;
+		const g = parseInt(hex.slice(3, 5), 16) / 255;
+		const b = parseInt(hex.slice(5, 7), 16) / 255;
+
+		const max = Math.max(r, g, b), min = Math.min(r, g, b);
+		let h = 0, s = 0;
+		const l = (max + min) / 2;
+
+		if (max !== min) {
+			const d = max - min;
+			s = l > 0.5 ? d / (2 - max - min) : d / (max + min);
+			switch (max) {
+				case r: h = ((g - b) / d + (g < b ? 6 : 0)) / 6; break;
+				case g: h = ((b - r) / d + 2) / 6; break;
+				case b: h = ((r - g) / d + 4) / 6; break;
+			}
+		}
+
+		return { h: h * 360, s: s * 100, l: l * 100 };
+	}
+
+	function hslToHex(hsl: { h: number; s: number; l: number }): string {
+		const h = hsl.h / 360, s = hsl.s / 100, l = hsl.l / 100;
+		let r, g, b;
+
+		if (s === 0) {
+			r = g = b = l;
+		} else {
+			const hue2rgb = (p: number, q: number, t: number) => {
+				if (t < 0) t += 1;
+				if (t > 1) t -= 1;
+				if (t < 1/6) return p + (q - p) * 6 * t;
+				if (t < 1/2) return q;
+				if (t < 2/3) return p + (q - p) * (2/3 - t) * 6;
+				return p;
+			};
+			const q = l < 0.5 ? l * (1 + s) : l + s - l * s;
+			const p = 2 * l - q;
+			r = hue2rgb(p, q, h + 1/3);
+			g = hue2rgb(p, q, h);
+			b = hue2rgb(p, q, h - 1/3);
+		}
+
+		const toHex = (x: number) => Math.round(x * 255).toString(16).padStart(2, '0');
+		return `#${toHex(r)}${toHex(g)}${toHex(b)}`;
+	}
+
+	// Preset palettes with solid color sets
+	const presetPalettes = [
+		{
+			name: 'Midnight Blue',
+			background: '#0f0f0f', text: '#fafafa', muted: '#a1a1aa',
+			accent: '#3b82f6', accentText: '#ffffff', border: '#3f3f46',
+			surface: '#1a1a1a', secondary: '#8b5cf6', tertiary: '#10b981',
+			solids: ['#3b82f6', '#8b5cf6', '#10b981', '#f59e0b', '#ef4444', '#ec4899']
+		},
+		{
+			name: 'Deep Purple',
+			background: '#0c0a1a', text: '#f5f3ff', muted: '#a78bfa',
+			accent: '#8b5cf6', accentText: '#ffffff', border: '#3b3363',
+			surface: '#1a1730', secondary: '#ec4899', tertiary: '#06b6d4',
+			solids: ['#8b5cf6', '#ec4899', '#06b6d4', '#a855f7', '#6366f1', '#14b8a6']
+		},
+		{
+			name: 'Forest',
+			background: '#0a0f0d', text: '#ecfdf5', muted: '#6ee7b7',
+			accent: '#10b981', accentText: '#ffffff', border: '#2d4a3e',
+			surface: '#132720', secondary: '#14b8a6', tertiary: '#f59e0b',
+			solids: ['#10b981', '#14b8a6', '#22c55e', '#84cc16', '#06b6d4', '#f59e0b']
+		},
+		{
+			name: 'Crimson',
+			background: '#0f0a0a', text: '#fef2f2', muted: '#fca5a5',
+			accent: '#ef4444', accentText: '#ffffff', border: '#4a2d2d',
+			surface: '#1a1212', secondary: '#f97316', tertiary: '#eab308',
+			solids: ['#ef4444', '#f97316', '#eab308', '#f43f5e', '#ec4899', '#fb923c']
+		},
+		{
+			name: 'Ocean',
+			background: '#0a0f14', text: '#ecfeff', muted: '#67e8f9',
+			accent: '#06b6d4', accentText: '#ffffff', border: '#2d4a52',
+			surface: '#0f1a20', secondary: '#3b82f6', tertiary: '#10b981',
+			solids: ['#06b6d4', '#3b82f6', '#0ea5e9', '#14b8a6', '#6366f1', '#10b981']
+		},
+		{
+			name: 'Amber Glow',
+			background: '#0f0d0a', text: '#fffbeb', muted: '#fcd34d',
+			accent: '#f59e0b', accentText: '#000000', border: '#4a4226',
+			surface: '#1a1710', secondary: '#ef4444', tertiary: '#84cc16',
+			solids: ['#f59e0b', '#eab308', '#ef4444', '#f97316', '#84cc16', '#fb923c']
+		},
+		{
+			name: 'Rose',
+			background: '#0f0a0c', text: '#fdf2f8', muted: '#f9a8d4',
+			accent: '#ec4899', accentText: '#ffffff', border: '#4a2d3d',
+			surface: '#1a1015', secondary: '#8b5cf6', tertiary: '#14b8a6',
+			solids: ['#ec4899', '#f43f5e', '#d946ef', '#8b5cf6', '#a855f7', '#14b8a6']
+		},
+		{
+			name: 'Slate',
+			background: '#0f1115', text: '#f1f5f9', muted: '#94a3b8',
+			accent: '#64748b', accentText: '#ffffff', border: '#334155',
+			surface: '#1e293b', secondary: '#6366f1', tertiary: '#22c55e',
+			solids: ['#64748b', '#6366f1', '#22c55e', '#0ea5e9', '#8b5cf6', '#f59e0b']
+		},
+	];
+
+	// Accent color options for randomization (vibrant, saturated colors)
+	const accentColors = [
+		{ hex: '#ef4444', name: 'red' },
+		{ hex: '#f97316', name: 'orange' },
+		{ hex: '#f59e0b', name: 'amber' },
+		{ hex: '#eab308', name: 'yellow' },
+		{ hex: '#84cc16', name: 'lime' },
+		{ hex: '#22c55e', name: 'green' },
+		{ hex: '#10b981', name: 'emerald' },
+		{ hex: '#14b8a6', name: 'teal' },
+		{ hex: '#06b6d4', name: 'cyan' },
+		{ hex: '#0ea5e9', name: 'sky' },
+		{ hex: '#3b82f6', name: 'blue' },
+		{ hex: '#6366f1', name: 'indigo' },
+		{ hex: '#8b5cf6', name: 'violet' },
+		{ hex: '#a855f7', name: 'purple' },
+		{ hex: '#d946ef', name: 'fuchsia' },
+		{ hex: '#ec4899', name: 'pink' },
+		{ hex: '#f43f5e', name: 'rose' },
+	];
+
+	// Dark background tints (800-950 range)
+	const darkBackgrounds = [
+		{ bg: '#0a0a0a', surface: '#171717', border: '#262626' }, // neutral 950/900/800
+		{ bg: '#0c0a09', surface: '#1c1917', border: '#292524' }, // stone
+		{ bg: '#0f0f0f', surface: '#1a1a1a', border: '#3f3f46' }, // zinc
+		{ bg: '#0a0a0b', surface: '#18181b', border: '#27272a' }, // zinc alt
+		{ bg: '#0c0a1a', surface: '#1a1730', border: '#3b3363' }, // purple tint
+		{ bg: '#0a0f0d', surface: '#132720', border: '#2d4a3e' }, // green tint
+		{ bg: '#0a0f14', surface: '#0f1a20', border: '#2d4a52' }, // blue tint
+		{ bg: '#0f0a0a', surface: '#1a1212', border: '#4a2d2d' }, // red tint
+	];
+
+	function randomizePalette() {
+		// Pick random dark background
+		const bgSet = darkBackgrounds[Math.floor(Math.random() * darkBackgrounds.length)];
+
+		// Pick 3 different accent colors
+		const shuffled = [...accentColors].sort(() => Math.random() - 0.5);
+		const primary = shuffled[0];
+		const secondary = shuffled[1];
+		const tertiary = shuffled[2];
+
+		// Generate muted color from primary accent (lighter, desaturated)
+		const mutedHex = lightenColor(primary.hex, 0.3);
+
+		// Determine accent text color based on accent brightness
+		const accentText = isColorDark(primary.hex) ? '#ffffff' : '#000000';
+
+		// Light text colors (slightly tinted toward primary accent)
+		const textHex = '#fafafa';
+
+		// Generate harmonious solids from the shuffled colors
+		const solids = shuffled.slice(0, 6).map(c => c.hex);
+
+		theme = {
+			background: bgSet.bg,
+			text: textHex,
+			muted: mutedHex,
+			accent: primary.hex,
+			accentText: accentText,
+			border: bgSet.border,
+			surface: bgSet.surface,
+			accentMuted: primary.hex,
+			accentBorder: primary.hex,
+			accentGlow: primary.hex,
+			secondary: secondary.hex,
+			tertiary: tertiary.hex,
+			solids: solids,
+		};
+	}
+
+	function applyPalette(palette: typeof presetPalettes[0]) {
+		theme = {
+			...palette,
+			accentMuted: palette.accent,
+			accentBorder: palette.accent,
+			accentGlow: palette.accent,
+			solids: palette.solids,
+		};
+	}
+
+	function lightenColor(hex: string, amount: number): string {
+		const r = parseInt(hex.slice(1, 3), 16);
+		const g = parseInt(hex.slice(3, 5), 16);
+		const b = parseInt(hex.slice(5, 7), 16);
+		const newR = Math.min(255, Math.round(r + (255 - r) * amount));
+		const newG = Math.min(255, Math.round(g + (255 - g) * amount));
+		const newB = Math.min(255, Math.round(b + (255 - b) * amount));
+		return `#${newR.toString(16).padStart(2, '0')}${newG.toString(16).padStart(2, '0')}${newB.toString(16).padStart(2, '0')}`;
+	}
+
 	// Theme colors - expanded palette
 	let theme = $state({
 		background: '#0f0f0f',
@@ -11,12 +289,14 @@
 		border: '#3f3f46',
 		surface: '#1a1a1a',
 		// Derived/tinted colors for neon effects
-		accentMuted: '#3b82f6',      // accent at lower opacity (we'll use opacity)
-		accentBorder: '#3b82f6',     // for outlines
-		accentGlow: '#3b82f6',       // for shadows/glows
+		accentMuted: '#3b82f6',
+		accentBorder: '#3b82f6',
+		accentGlow: '#3b82f6',
 		// Secondary accent
-		secondary: '#8b5cf6',        // purple
-		tertiary: '#10b981',         // emerald
+		secondary: '#8b5cf6',
+		tertiary: '#10b981',
+		// Harmonious solid colors for multi-color displays
+		solids: ['#3b82f6', '#8b5cf6', '#10b981', '#f59e0b', '#ef4444', '#ec4899'] as string[],
 	});
 
 	// Slide state
@@ -82,6 +362,8 @@
 		{ id: 'table-2', name: 'Table #2 - Pricing' },
 		{ id: 'table-3', name: 'Table #3 - Data' },
 		// UI Components
+		{ id: 'color-boxes', name: 'Color Boxes' },
+		{ id: 'color-icons', name: 'Color Icons' },
 		{ id: 'pills-badges', name: 'Pills & Badges' },
 		{ id: 'callouts', name: 'Callouts' },
 		{ id: 'dividers', name: 'Dividers' },
@@ -99,7 +381,7 @@
 		{ name: 'Flow', range: [35, 38] },
 		{ name: 'Lists', range: [38, 41] },
 		{ name: 'Tables', range: [41, 44] },
-		{ name: 'UI', range: [44, 47] },
+		{ name: 'UI', range: [44, 49] },
 	];
 
 	let expandedCategories = $state<Set<string>>(new Set(['Titles']));
@@ -117,14 +399,6 @@
 	}
 
 	let isDarkTheme = $derived(isColorDark(theme.background));
-
-	function isColorDark(hex: string): boolean {
-		const r = parseInt(hex.slice(1, 3), 16);
-		const g = parseInt(hex.slice(3, 5), 16);
-		const b = parseInt(hex.slice(5, 7), 16);
-		const luminance = (0.299 * r + 0.587 * g + 0.114 * b) / 255;
-		return luminance < 0.5;
-	}
 
 	// Helper to create rgba from hex
 	function hexToRgba(hex: string, alpha: number): string {
@@ -944,6 +1218,52 @@
 					</div>
 				</div>
 
+			{:else if slides[selectedSlideIndex].id === 'color-boxes'}
+				<!-- Color Boxes - 6 colored rounded boxes -->
+				<div class="w-full h-full flex flex-col p-8">
+					<button onclick={() => handleColorClick(theme.text, 'Heading')} class="text-2xl font-bold mb-2 hover:ring-2 hover:ring-blue-500 rounded px-2 py-1 transition-all cursor-pointer self-start" style="color: {theme.text}">Color Palette</button>
+					<button onclick={() => handleColorClick(theme.muted, 'Subtitle')} class="text-sm mb-6 hover:ring-2 hover:ring-blue-500 rounded px-2 py-1 transition-all cursor-pointer self-start" style="color: {theme.muted}">Harmonious colors that work together</button>
+					<div class="flex-1 grid grid-cols-3 gap-4">
+						{#each theme.solids as color, i}
+							<button
+								onclick={() => handleColorClick(color, `Color ${i + 1}`)}
+								class="rounded-2xl flex items-center justify-center hover:ring-2 hover:ring-white/30 hover:scale-[1.02] transition-all cursor-pointer"
+								style="background-color: {color}"
+							>
+								<span class="text-white/90 font-mono text-sm font-medium drop-shadow-md">{color}</span>
+							</button>
+						{/each}
+					</div>
+				</div>
+
+			{:else if slides[selectedSlideIndex].id === 'color-icons'}
+				<!-- Color Icons - 6 icons with colored backgrounds -->
+				<div class="w-full h-full flex flex-col p-8">
+					<button onclick={() => handleColorClick(theme.text, 'Heading')} class="text-2xl font-bold mb-2 hover:ring-2 hover:ring-blue-500 rounded px-2 py-1 transition-all cursor-pointer self-start" style="color: {theme.text}">Our Services</button>
+					<button onclick={() => handleColorClick(theme.muted, 'Subtitle')} class="text-sm mb-6 hover:ring-2 hover:ring-blue-500 rounded px-2 py-1 transition-all cursor-pointer self-start" style="color: {theme.muted}">Everything you need to succeed</button>
+					<div class="flex-1 grid grid-cols-3 gap-4">
+						{#each [
+							{ icon: 'M13 10V3L4 14h7v7l9-11h-7z', label: 'Speed' },
+							{ icon: 'M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z', label: 'Security' },
+							{ icon: 'M4 5a1 1 0 011-1h14a1 1 0 011 1v2a1 1 0 01-1 1H5a1 1 0 01-1-1V5zM4 13a1 1 0 011-1h6a1 1 0 011 1v6a1 1 0 01-1 1H5a1 1 0 01-1-1v-6zM16 13a1 1 0 011-1h2a1 1 0 011 1v6a1 1 0 01-1 1h-2a1 1 0 01-1-1v-6z', label: 'Layout' },
+							{ icon: 'M7 21a4 4 0 01-4-4V5a2 2 0 012-2h4a2 2 0 012 2v12a4 4 0 01-4 4zm0 0h12a2 2 0 002-2v-4a2 2 0 00-2-2h-2.343M11 7.343l1.657-1.657a2 2 0 012.828 0l2.829 2.829a2 2 0 010 2.828l-8.486 8.485M7 17h.01', label: 'Design' },
+							{ icon: 'M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z', label: 'Analytics' },
+							{ icon: 'M8 12h.01M12 12h.01M16 12h.01M21 12c0 4.418-4.03 8-9 8a9.863 9.863 0 01-4.255-.949L3 20l1.395-3.72C3.512 15.042 3 13.574 3 12c0-4.418 4.03-8 9-8s9 3.582 9 8z', label: 'Support' },
+						] as item, i}
+							<button
+								onclick={() => handleColorClick(theme.solids[i], item.label)}
+								class="rounded-2xl flex flex-col items-center justify-center gap-3 hover:ring-2 hover:ring-white/30 hover:scale-[1.02] transition-all cursor-pointer p-4"
+								style="background-color: {theme.solids[i]}"
+							>
+								<svg class="w-10 h-10 text-white drop-shadow-md" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+									<path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d={item.icon} />
+								</svg>
+								<span class="text-white font-semibold text-sm drop-shadow-md">{item.label}</span>
+							</button>
+						{/each}
+					</div>
+				</div>
+
 			{:else if slides[selectedSlideIndex].id === 'pills-badges'}
 				<!-- Pills & Badges -->
 				<div class="w-full h-full flex flex-col p-8 overflow-y-auto">
@@ -1098,9 +1418,55 @@
 	<!-- Right Sidebar - Theme Colors -->
 	<aside class="w-60 bg-zinc-900 border-l border-zinc-800 flex flex-col shrink-0">
 		<div class="h-10 px-3 flex items-center border-b border-zinc-800">
-			<span class="text-xs font-medium text-zinc-400">Theme Colors</span>
+			<span class="text-xs font-medium text-zinc-400">Theme</span>
+			<button
+				onclick={randomizePalette}
+				class="ml-auto p-1.5 rounded hover:bg-zinc-800 text-zinc-500 hover:text-zinc-300 transition-colors"
+				title="Randomize palette"
+			>
+				<svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+					<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15" />
+				</svg>
+			</button>
 		</div>
-		<div class="flex-1 overflow-y-auto p-3 space-y-2">
+
+		<!-- Base Color Picker -->
+		<div class="p-2 border-b border-zinc-800">
+			<div class="text-[10px] text-zinc-500 mb-1.5 px-1">Base Color</div>
+			<div class="grid grid-cols-6 gap-1">
+				{#each baseColors as color}
+					<button
+						onclick={() => generateThemeFromBase(color.hex)}
+						class="aspect-square rounded-sm hover:scale-110 transition-all {theme.accent === color.hex ? 'ring-2 ring-white ring-offset-1 ring-offset-zinc-900' : ''}"
+						style="background-color: {color.hex}"
+						title={color.name}
+					></button>
+				{/each}
+			</div>
+		</div>
+
+		<!-- Palette Presets -->
+		<div class="p-2 border-b border-zinc-800">
+			<div class="text-[10px] text-zinc-500 mb-1.5 px-1">Presets</div>
+			<div class="grid grid-cols-4 gap-1">
+				{#each presetPalettes as palette}
+					<button
+						onclick={() => applyPalette(palette)}
+						class="group relative aspect-square rounded overflow-hidden hover:ring-1 hover:ring-zinc-600 transition-all"
+						title={palette.name}
+					>
+						<div class="absolute inset-0" style="background-color: {palette.background}"></div>
+						<div class="absolute bottom-0 left-0 right-0 h-1/2 flex">
+							<div class="flex-1" style="background-color: {palette.accent}"></div>
+							<div class="flex-1" style="background-color: {palette.secondary}"></div>
+							<div class="flex-1" style="background-color: {palette.tertiary}"></div>
+						</div>
+					</button>
+				{/each}
+			</div>
+		</div>
+
+		<div class="flex-1 overflow-y-auto p-3 space-y-2 sidebar-scroll">
 			<!-- Background -->
 			<button
 				onclick={() => handleColorClick(theme.background, 'Background')}
