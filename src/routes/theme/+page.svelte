@@ -307,84 +307,50 @@
 
 	// Slide definitions - multiple variations per concept
 	const slides = [
-		// Title Slides (5 variations)
-		{ id: 'title-1', name: 'Title #1 - Centered' },
-		{ id: 'title-2', name: 'Title #2 - Left Aligned' },
-		{ id: 'title-3', name: 'Title #3 - Gradient' },
-		{ id: 'title-4', name: 'Title #4 - Split' },
-		{ id: 'title-5', name: 'Title #5 - Minimal' },
-		// Section Slides (5 variations)
-		{ id: 'section-1', name: 'Section #1 - Numbered' },
-		{ id: 'section-2', name: 'Section #2 - Line' },
-		{ id: 'section-3', name: 'Section #3 - Gradient' },
-		{ id: 'section-4', name: 'Section #4 - Icon' },
-		{ id: 'section-5', name: 'Section #5 - Bold' },
-		// Content Slides (5 variations)
-		{ id: 'content-1', name: 'Content #1 - Bullets' },
-		{ id: 'content-2', name: 'Content #2 - Two Column' },
-		{ id: 'content-3', name: 'Content #3 - Sidebar' },
-		{ id: 'content-4', name: 'Content #4 - Numbered' },
-		{ id: 'content-5', name: 'Content #5 - Cards' },
-		// Feature Cards (5 variations)
-		{ id: 'features-1', name: 'Features #1 - Icon Grid' },
-		{ id: 'features-2', name: 'Features #2 - Horizontal' },
-		{ id: 'features-3', name: 'Features #3 - Neon' },
-		{ id: 'features-4', name: 'Features #4 - Gradient' },
-		{ id: 'features-5', name: 'Features #5 - Minimal' },
-		// Image + Text (5 variations)
-		{ id: 'image-1', name: 'Image #1 - Left' },
-		{ id: 'image-2', name: 'Image #2 - Right' },
-		{ id: 'image-3', name: 'Image #3 - Top' },
-		{ id: 'image-4', name: 'Image #4 - Overlay' },
-		{ id: 'image-5', name: 'Image #5 - Gallery' },
-		// Stats/Metrics (5 variations)
-		{ id: 'stats-1', name: 'Stats #1 - Grid' },
-		{ id: 'stats-2', name: 'Stats #2 - Row' },
-		{ id: 'stats-3', name: 'Stats #3 - Icons' },
-		{ id: 'stats-4', name: 'Stats #4 - Progress' },
-		{ id: 'stats-5', name: 'Stats #5 - Comparison' },
-		// Testimonials (5 variations)
-		{ id: 'quote-1', name: 'Quote #1 - Large' },
-		{ id: 'quote-2', name: 'Quote #2 - Cards' },
-		{ id: 'quote-3', name: 'Quote #3 - Profile' },
-		{ id: 'quote-4', name: 'Quote #4 - Rating' },
-		{ id: 'quote-5', name: 'Quote #5 - Minimal' },
-		// Process/Flow (3 variations)
-		{ id: 'flow-1', name: 'Flow #1 - Horizontal' },
-		{ id: 'flow-2', name: 'Flow #2 - Vertical' },
-		{ id: 'flow-3', name: 'Flow #3 - Connected' },
-		// Lists (3 variations)
-		{ id: 'list-1', name: 'List #1 - Checks' },
-		{ id: 'list-2', name: 'List #2 - Icons' },
-		{ id: 'list-3', name: 'List #3 - Numbered' },
-		// Tables (3 variations)
-		{ id: 'table-1', name: 'Table #1 - Comparison' },
-		{ id: 'table-2', name: 'Table #2 - Pricing' },
-		{ id: 'table-3', name: 'Table #3 - Data' },
-		// UI Components
+		{ id: 'title-1', name: 'Title - Centered' },
+		{ id: 'title-4', name: 'Title - Split' },
+		{ id: 'title-5', name: 'Title - Minimal' },
+		{ id: 'section-1', name: 'Section - Numbered' },
+		{ id: 'section-2', name: 'Section - Line' },
+		{ id: 'section-4', name: 'Section - Icon' },
+		{ id: 'content-1', name: 'Content - Bullets' },
+		{ id: 'content-2', name: 'Content - Two Column' },
+		{ id: 'content-3', name: 'Content - Sidebar' },
+		{ id: 'content-4', name: 'Content - Numbered' },
+		{ id: 'content-5', name: 'Content - Cards' },
+		{ id: 'features-1', name: 'Features - Icon Grid' },
+		{ id: 'features-2', name: 'Features - Horizontal' },
+		{ id: 'features-3', name: 'Features - Neon' },
+		{ id: 'features-5', name: 'Features - Minimal' },
+		{ id: 'image-1', name: 'Image - Left' },
+		{ id: 'image-2', name: 'Image - Right' },
+		{ id: 'image-3', name: 'Image - Top' },
+		{ id: 'image-4', name: 'Image - Overlay' },
+		{ id: 'image-5', name: 'Image - Gallery' },
+		{ id: 'stats-1', name: 'Stats - Grid' },
+		{ id: 'stats-2', name: 'Stats - Row' },
+		{ id: 'stats-3', name: 'Stats - Icons' },
+		{ id: 'stats-4', name: 'Stats - Progress' },
+		{ id: 'stats-5', name: 'Stats - Comparison' },
+		{ id: 'quote-1', name: 'Quote - Large' },
+		{ id: 'quote-2', name: 'Quote - Cards' },
+		{ id: 'quote-3', name: 'Quote - Profile' },
+		{ id: 'quote-4', name: 'Quote - Rating' },
+		{ id: 'quote-5', name: 'Quote - Minimal' },
+		{ id: 'flow-1', name: 'Flow - Horizontal' },
+		{ id: 'flow-2', name: 'Flow - Vertical' },
+		{ id: 'flow-3', name: 'Flow - Connected' },
+		{ id: 'list-1', name: 'List - Checks' },
+		{ id: 'list-2', name: 'List - Icons' },
+		{ id: 'list-3', name: 'List - Numbered' },
+		{ id: 'table-1', name: 'Table - Comparison' },
+		{ id: 'table-2', name: 'Table - Pricing' },
+		{ id: 'table-3', name: 'Table - Data' },
 		{ id: 'color-boxes', name: 'Color Boxes' },
 		{ id: 'color-icons', name: 'Color Icons' },
 		{ id: 'pills-badges', name: 'Pills & Badges' },
-		{ id: 'callouts', name: 'Callouts' },
 		{ id: 'dividers', name: 'Dividers' },
 	];
-
-	// Slide categories for grouped sidebar
-	const slideCategories = [
-		{ name: 'Titles', range: [0, 5] },
-		{ name: 'Sections', range: [5, 10] },
-		{ name: 'Content', range: [10, 15] },
-		{ name: 'Features', range: [15, 20] },
-		{ name: 'Images', range: [20, 25] },
-		{ name: 'Stats', range: [25, 30] },
-		{ name: 'Quotes', range: [30, 35] },
-		{ name: 'Flow', range: [35, 38] },
-		{ name: 'Lists', range: [38, 41] },
-		{ name: 'Tables', range: [41, 44] },
-		{ name: 'UI', range: [44, 49] },
-	];
-
-	let expandedCategories = $state<Set<string>>(new Set(['Titles']));
 
 	async function handleColorClick(hex: string, label: string) {
 		const success = await copyToClipboard(hex);
@@ -425,54 +391,22 @@
 <!-- Content Area -->
 <div class="flex-1 flex min-h-0">
 	<!-- Slides Sidebar -->
-	<aside class="w-48 bg-zinc-900 border-r border-zinc-800 flex flex-col shrink-0">
+	<aside class="w-44 bg-zinc-900 border-r border-zinc-800 flex flex-col shrink-0">
 		<div class="h-10 px-3 flex items-center border-b border-zinc-800">
 			<span class="text-xs font-medium text-zinc-400">Slides</span>
 			<span class="ml-auto text-[10px] text-zinc-600">{slides.length}</span>
 		</div>
 		<div class="flex-1 overflow-y-auto py-1 sidebar-scroll">
-			{#each slideCategories as category}
-				{@const categorySlides = slides.slice(category.range[0], category.range[1])}
-				{@const isExpanded = expandedCategories.has(category.name)}
-				{@const hasSelectedSlide = selectedSlideIndex >= category.range[0] && selectedSlideIndex < category.range[1]}
-				<div class="mb-0.5">
-					<!-- Category Header -->
-					<button
-						onclick={() => {
-							const newSet = new Set(expandedCategories);
-							if (isExpanded) {
-								newSet.delete(category.name);
-							} else {
-								newSet.add(category.name);
-							}
-							expandedCategories = newSet;
-						}}
-						class="w-full flex items-center gap-1.5 px-2 py-1.5 text-left transition-colors hover:bg-zinc-800/50 {hasSelectedSlide ? 'text-zinc-200' : 'text-zinc-500'}"
-					>
-						<svg class="w-3 h-3 shrink-0 transition-transform {isExpanded ? 'rotate-90' : ''}" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-							<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7" />
-						</svg>
-						<span class="text-[11px] font-medium">{category.name}</span>
-						<span class="ml-auto text-[10px] text-zinc-600">{categorySlides.length}</span>
-					</button>
-					<!-- Category Items -->
-					{#if isExpanded}
-						<div class="ml-2">
-							{#each categorySlides as slide, i}
-								{@const globalIndex = category.range[0] + i}
-								<button
-									onclick={() => (selectedSlideIndex = globalIndex)}
-									class="w-full flex items-center gap-2 pl-3 pr-2 py-1 text-left transition-colors {selectedSlideIndex === globalIndex ? 'bg-zinc-800 text-zinc-100' : 'text-zinc-500 hover:bg-zinc-800/50 hover:text-zinc-400'}"
-								>
-									<svg class="w-3.5 h-3.5 shrink-0 {selectedSlideIndex === globalIndex ? 'text-blue-400' : 'text-zinc-600'}" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-										<path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M4 5a1 1 0 011-1h14a1 1 0 011 1v14a1 1 0 01-1 1H5a1 1 0 01-1-1V5z" />
-									</svg>
-									<span class="text-[11px] truncate">{slide.name.split(' - ')[1] || slide.name}</span>
-								</button>
-							{/each}
-						</div>
-					{/if}
-				</div>
+			{#each slides as slide, index}
+				<button
+					onclick={() => (selectedSlideIndex = index)}
+					class="w-full flex items-center gap-2 px-3 py-1 text-left transition-colors {selectedSlideIndex === index ? 'bg-zinc-800 text-zinc-100' : 'text-zinc-500 hover:bg-zinc-800/50 hover:text-zinc-400'}"
+				>
+					<svg class="w-3.5 h-3.5 shrink-0 {selectedSlideIndex === index ? 'text-blue-400' : 'text-zinc-600'}" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+						<path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M4 5a1 1 0 011-1h14a1 1 0 011 1v14a1 1 0 01-1 1H5a1 1 0 01-1-1V5z" />
+					</svg>
+					<span class="text-[11px] truncate">{slide.name}</span>
+				</button>
 			{/each}
 		</div>
 	</aside>
@@ -492,34 +426,6 @@
 					</button>
 					<button onclick={() => handleColorClick(theme.muted, 'Subtitle')} class="text-xl hover:ring-2 hover:ring-blue-500 hover:ring-offset-4 rounded px-2 py-1 transition-all cursor-pointer" style="color: {theme.muted}">
 						A compelling subtitle that captures attention
-					</button>
-				</div>
-
-			{:else if slides[selectedSlideIndex].id === 'title-2'}
-				<!-- Title #2 - Left Aligned with Accent -->
-				<div class="w-full h-full flex flex-col justify-center p-12">
-					<div class="w-24 h-1 rounded mb-8" style="background-color: {theme.accent}"></div>
-					<button onclick={() => handleColorClick(theme.text, 'Title')} class="text-5xl font-bold mb-4 hover:ring-2 hover:ring-blue-500 hover:ring-offset-4 rounded px-3 py-2 transition-all cursor-pointer self-start" style="color: {theme.text}; --tw-ring-offset-color: {theme.background}">
-						Bold Statement
-					</button>
-					<button onclick={() => handleColorClick(theme.muted, 'Subtitle')} class="text-xl hover:ring-2 hover:ring-blue-500 hover:ring-offset-4 rounded px-2 py-1 transition-all cursor-pointer self-start max-w-xl" style="color: {theme.muted}">
-						Supporting text that provides context and draws the audience in
-					</button>
-					<div class="flex gap-4 mt-8">
-						<button onclick={() => handleColorClick(theme.accent, 'CTA Button')} class="px-6 py-3 rounded-lg text-sm font-semibold hover:ring-2 hover:ring-white/30 transition-all cursor-pointer" style="background-color: {theme.accent}; color: {theme.accentText}">Get Started</button>
-						<button onclick={() => handleColorClick(theme.border, 'Secondary Button')} class="px-6 py-3 rounded-lg text-sm font-semibold border hover:ring-2 hover:ring-blue-500 transition-all cursor-pointer" style="border-color: {theme.border}; color: {theme.text}">Learn More</button>
-					</div>
-				</div>
-
-			{:else if slides[selectedSlideIndex].id === 'title-3'}
-				<!-- Title #3 - Gradient Text -->
-				<div class="w-full h-full flex flex-col items-center justify-center p-12 relative overflow-hidden">
-					<div class="absolute inset-0 opacity-20" style="background: radial-gradient(circle at 30% 50%, {theme.accent} 0%, transparent 50%), radial-gradient(circle at 70% 50%, {theme.secondary} 0%, transparent 50%)"></div>
-					<button onclick={() => handleColorClick(theme.accent, 'Gradient Title')} class="relative text-6xl font-black mb-6 hover:ring-2 hover:ring-blue-500 rounded px-3 py-2 transition-all cursor-pointer bg-clip-text text-transparent" style="background-image: linear-gradient(135deg, {theme.accent}, {theme.secondary}, {theme.tertiary})">
-						Creative Vision
-					</button>
-					<button onclick={() => handleColorClick(theme.text, 'Subtitle')} class="relative text-2xl hover:ring-2 hover:ring-blue-500 rounded px-2 py-1 transition-all cursor-pointer" style="color: {theme.text}">
-						Where innovation meets design
 					</button>
 				</div>
 
@@ -566,14 +472,6 @@
 					</div>
 				</div>
 
-			{:else if slides[selectedSlideIndex].id === 'section-3'}
-				<!-- Section #3 - Gradient Background -->
-				<button onclick={() => handleColorClick(theme.accent, 'Gradient BG')} class="w-full h-full flex flex-col items-center justify-center p-12 hover:ring-2 hover:ring-white/30 hover:ring-inset transition-all cursor-pointer" style="background: linear-gradient(135deg, {theme.accent}, {theme.secondary})">
-					<span class="text-white/60 text-sm uppercase tracking-widest mb-4">Section Three</span>
-					<span class="text-white text-5xl font-bold mb-4 text-center">Key Insights</span>
-					<span class="text-white/80 text-xl text-center">Data-driven decisions</span>
-				</button>
-
 			{:else if slides[selectedSlideIndex].id === 'section-4'}
 				<!-- Section #4 - With Icon -->
 				<div class="w-full h-full flex flex-col items-center justify-center p-12">
@@ -582,16 +480,6 @@
 					</button>
 					<button onclick={() => handleColorClick(theme.text, 'Title')} class="text-4xl font-bold mb-4 hover:ring-2 hover:ring-blue-500 rounded px-3 py-1 transition-all cursor-pointer text-center" style="color: {theme.text}">Innovation</button>
 					<button onclick={() => handleColorClick(theme.muted, 'Subtitle')} class="text-lg hover:ring-2 hover:ring-blue-500 rounded px-2 py-1 transition-all cursor-pointer text-center max-w-md" style="color: {theme.muted}">Exploring new ideas and pushing boundaries</button>
-				</div>
-
-			{:else if slides[selectedSlideIndex].id === 'section-5'}
-				<!-- Section #5 - Bold Minimal -->
-				<div class="w-full h-full flex flex-col justify-end p-12">
-					<button onclick={() => handleColorClick(theme.text, 'Big Title')} class="text-7xl font-black mb-4 hover:ring-2 hover:ring-blue-500 rounded px-3 py-1 transition-all cursor-pointer self-start leading-none" style="color: {theme.text}">Results.</button>
-					<div class="flex items-center gap-4 mt-4">
-						<div class="w-12 h-1 rounded" style="background-color: {theme.accent}"></div>
-						<button onclick={() => handleColorClick(theme.muted, 'Subtitle')} class="text-sm uppercase tracking-widest hover:ring-2 hover:ring-blue-500 rounded px-2 py-1 transition-all cursor-pointer" style="color: {theme.muted}">What we achieved</button>
-					</div>
 				</div>
 
 			{:else if slides[selectedSlideIndex].id === 'content-1'}
@@ -819,29 +707,6 @@
 						<button onclick={() => handleColorClick(theme.tertiary, 'Neon Card')} class="rounded-xl p-6 border-2 hover:ring-2 hover:ring-white/30 transition-all cursor-pointer text-left" style="border-color: {theme.tertiary}; background-color: {hexToRgba(theme.tertiary, 0.08)}; box-shadow: 0 0 25px {hexToRgba(theme.tertiary, 0.3)}">
 							<span class="text-lg font-semibold block mb-2" style="color: {theme.tertiary}">Open API</span>
 							<span class="text-sm" style="color: {theme.muted}">Integrate with anything</span>
-						</button>
-					</div>
-				</div>
-
-			{:else if slides[selectedSlideIndex].id === 'features-4'}
-				<!-- Features #4 - Gradient Cards -->
-				<div class="w-full h-full flex flex-col p-10">
-					<button onclick={() => handleColorClick(theme.text, 'Title')} class="text-3xl font-bold mb-8 hover:ring-2 hover:ring-blue-500 rounded px-2 py-1 transition-all cursor-pointer self-start" style="color: {theme.text}">Premium Features</button>
-					<div class="flex-1 grid grid-cols-3 gap-5">
-						<button onclick={() => handleColorClick(theme.accent, 'Gradient')} class="rounded-xl p-6 hover:ring-2 hover:ring-white/30 transition-all cursor-pointer text-left text-white" style="background: linear-gradient(135deg, {theme.accent}, {theme.secondary})">
-							<svg class="w-8 h-8 mb-4 text-white/80" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z" /></svg>
-							<span class="font-semibold block mb-2">Performance</span>
-							<span class="text-sm text-white/80">Blazing fast execution</span>
-						</button>
-						<button onclick={() => handleColorClick(theme.secondary, 'Gradient')} class="rounded-xl p-6 hover:ring-2 hover:ring-white/30 transition-all cursor-pointer text-left text-white" style="background: linear-gradient(135deg, {theme.secondary}, {theme.tertiary})">
-							<svg class="w-8 h-8 mb-4 text-white/80" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 5a1 1 0 011-1h14a1 1 0 011 1v2a1 1 0 01-1 1H5a1 1 0 01-1-1V5zM4 13a1 1 0 011-1h6a1 1 0 011 1v6a1 1 0 01-1 1H5a1 1 0 01-1-1v-6zM16 13a1 1 0 011-1h2a1 1 0 011 1v6a1 1 0 01-1 1h-2a1 1 0 01-1-1v-6z" /></svg>
-							<span class="font-semibold block mb-2">Flexibility</span>
-							<span class="text-sm text-white/80">Customize everything</span>
-						</button>
-						<button onclick={() => handleColorClick(theme.tertiary, 'Gradient')} class="rounded-xl p-6 hover:ring-2 hover:ring-white/30 transition-all cursor-pointer text-left text-white" style="background: linear-gradient(135deg, {theme.tertiary}, {theme.accent})">
-							<svg class="w-8 h-8 mb-4 text-white/80" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z" /></svg>
-							<span class="font-semibold block mb-2">Security</span>
-							<span class="text-sm text-white/80">Enterprise protection</span>
 						</button>
 					</div>
 				</div>
@@ -1300,52 +1165,6 @@
 							<button onclick={() => handleColorClick(theme.accent, 'Neon')} class="px-3 py-1 rounded-full text-xs font-medium border hover:ring-2 hover:ring-white/30 transition-all cursor-pointer" style="border-color: {theme.accent}; color: {theme.accent}; background-color: {hexToRgba(theme.accent, 0.1)}; box-shadow: 0 0 10px {hexToRgba(theme.accent, 0.3)}">Neon</button>
 							<button onclick={() => handleColorClick(theme.secondary, 'Neon')} class="px-3 py-1 rounded-full text-xs font-medium border hover:ring-2 hover:ring-white/30 transition-all cursor-pointer" style="border-color: {theme.secondary}; color: {theme.secondary}; background-color: {hexToRgba(theme.secondary, 0.1)}; box-shadow: 0 0 10px {hexToRgba(theme.secondary, 0.3)}">Glow</button>
 						</div></div>
-					</div>
-				</div>
-
-			{:else if slides[selectedSlideIndex].id === 'callouts'}
-				<!-- Callouts & Alerts -->
-				<div class="w-full h-full flex flex-col p-8">
-					<button
-						onclick={() => handleColorClick(theme.text, 'Heading')}
-						class="text-2xl font-bold mb-4 hover:ring-2 hover:ring-blue-500 hover:ring-offset-4 rounded px-2 py-1 transition-all cursor-pointer self-start"
-						style="color: {theme.text}; --tw-ring-offset-color: {theme.background}"
-					>
-						Callouts & Alerts
-					</button>
-					<div class="flex-1 flex flex-col gap-4">
-						<!-- Info callout -->
-						<button onclick={() => handleColorClick(theme.accent, 'Info callout')} class="flex items-start gap-3 p-4 rounded-xl hover:ring-2 hover:ring-blue-500 transition-all cursor-pointer text-left" style="background-color: {hexToRgba(theme.accent, 0.1)}; border-left: 4px solid {theme.accent}">
-							<svg class="w-5 h-5 shrink-0 mt-0.5" style="color: {theme.accent}" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" /></svg>
-							<div>
-								<div class="font-semibold text-sm" style="color: {theme.accent}">Information</div>
-								<div class="text-sm mt-1" style="color: {theme.muted}">This is an informational message with helpful context.</div>
-							</div>
-						</button>
-						<!-- Success callout -->
-						<button onclick={() => handleColorClick(theme.tertiary, 'Success callout')} class="flex items-start gap-3 p-4 rounded-xl hover:ring-2 hover:ring-blue-500 transition-all cursor-pointer text-left" style="background-color: {hexToRgba(theme.tertiary, 0.1)}; border-left: 4px solid {theme.tertiary}">
-							<svg class="w-5 h-5 shrink-0 mt-0.5" style="color: {theme.tertiary}" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" /></svg>
-							<div>
-								<div class="font-semibold text-sm" style="color: {theme.tertiary}">Success</div>
-								<div class="text-sm mt-1" style="color: {theme.muted}">Operation completed successfully.</div>
-							</div>
-						</button>
-						<!-- Warning callout -->
-						<button onclick={() => handleColorClick('#f59e0b', 'Warning callout')} class="flex items-start gap-3 p-4 rounded-xl hover:ring-2 hover:ring-blue-500 transition-all cursor-pointer text-left" style="background-color: rgba(245, 158, 11, 0.1); border-left: 4px solid #f59e0b">
-							<svg class="w-5 h-5 shrink-0 mt-0.5 text-amber-500" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z" /></svg>
-							<div>
-								<div class="font-semibold text-sm text-amber-500">Warning</div>
-								<div class="text-sm mt-1" style="color: {theme.muted}">Please review before proceeding.</div>
-							</div>
-						</button>
-						<!-- Outlined callout -->
-						<button onclick={() => handleColorClick(theme.secondary, 'Outlined callout')} class="flex items-start gap-3 p-4 rounded-xl border hover:ring-2 hover:ring-blue-500 transition-all cursor-pointer text-left" style="border-color: {theme.secondary}">
-							<svg class="w-5 h-5 shrink-0 mt-0.5" style="color: {theme.secondary}" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9.663 17h4.673M12 3v1m6.364 1.636l-.707.707M21 12h-1M4 12H3m3.343-5.657l-.707-.707m2.828 9.9a5 5 0 117.072 0l-.548.547A3.374 3.374 0 0014 18.469V19a2 2 0 11-4 0v-.531c0-.895-.356-1.754-.988-2.386l-.548-.547z" /></svg>
-							<div>
-								<div class="font-semibold text-sm" style="color: {theme.secondary}">Pro Tip</div>
-								<div class="text-sm mt-1" style="color: {theme.muted}">Use keyboard shortcuts for faster navigation.</div>
-							</div>
-						</button>
 					</div>
 				</div>
 
