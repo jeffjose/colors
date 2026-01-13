@@ -81,12 +81,28 @@
 		{ id: 'table-1', name: 'Table #1 - Comparison' },
 		{ id: 'table-2', name: 'Table #2 - Pricing' },
 		{ id: 'table-3', name: 'Table #3 - Data' },
-		// UI Components (3 each)
-		{ id: 'buttons', name: 'Buttons' },
+		// UI Components
 		{ id: 'pills-badges', name: 'Pills & Badges' },
 		{ id: 'callouts', name: 'Callouts' },
 		{ id: 'dividers', name: 'Dividers' },
 	];
+
+	// Slide categories for grouped sidebar
+	const slideCategories = [
+		{ name: 'Titles', range: [0, 5] },
+		{ name: 'Sections', range: [5, 10] },
+		{ name: 'Content', range: [10, 15] },
+		{ name: 'Features', range: [15, 20] },
+		{ name: 'Images', range: [20, 25] },
+		{ name: 'Stats', range: [25, 30] },
+		{ name: 'Quotes', range: [30, 35] },
+		{ name: 'Flow', range: [35, 38] },
+		{ name: 'Lists', range: [38, 41] },
+		{ name: 'Tables', range: [41, 44] },
+		{ name: 'UI', range: [44, 47] },
+	];
+
+	let expandedCategories = $state<Set<string>>(new Set(['Titles']));
 
 	async function handleColorClick(hex: string, label: string) {
 		const success = await copyToClipboard(hex);
@@ -134,22 +150,51 @@
 
 <!-- Content Area -->
 <div class="flex-1 flex min-h-0">
-	<!-- Slides Sidebar (Figma layers style) -->
-	<aside class="w-44 bg-zinc-900 border-r border-zinc-800 flex flex-col shrink-0">
-		<div class="h-10 px-3 flex items-center border-b border-zinc-800">
-			<span class="text-xs font-medium text-zinc-400">Slides</span>
+	<!-- Slides Sidebar -->
+	<aside class="w-40 bg-zinc-950 border-r border-zinc-800/50 flex flex-col shrink-0">
+		<div class="h-9 px-2.5 flex items-center border-b border-zinc-800/50">
+			<span class="text-[10px] font-medium text-zinc-500 uppercase tracking-wider">Slides</span>
 		</div>
-		<div class="flex-1 overflow-y-auto py-1">
-			{#each slides as slide, index}
-				<button
-					onclick={() => (selectedSlideIndex = index)}
-					class="w-full flex items-center gap-2 px-3 py-1.5 text-left transition-colors {selectedSlideIndex === index ? 'bg-zinc-800 text-zinc-100' : 'text-zinc-400 hover:bg-zinc-800/50 hover:text-zinc-300'}"
-				>
-					<svg class="w-4 h-4 shrink-0 {selectedSlideIndex === index ? 'text-blue-400' : 'text-zinc-500'}" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-						<path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M4 5a1 1 0 011-1h14a1 1 0 011 1v14a1 1 0 01-1 1H5a1 1 0 01-1-1V5z" />
-					</svg>
-					<span class="text-xs truncate">{slide.name}</span>
-				</button>
+		<div class="flex-1 overflow-y-auto py-0.5">
+			{#each slideCategories as category}
+				{@const categorySlides = slides.slice(category.range[0], category.range[1])}
+				{@const isExpanded = expandedCategories.has(category.name)}
+				{@const hasSelectedSlide = selectedSlideIndex >= category.range[0] && selectedSlideIndex < category.range[1]}
+				<div>
+					<!-- Category Header -->
+					<button
+						onclick={() => {
+							const newSet = new Set(expandedCategories);
+							if (isExpanded) {
+								newSet.delete(category.name);
+							} else {
+								newSet.add(category.name);
+							}
+							expandedCategories = newSet;
+						}}
+						class="w-full flex items-center gap-1 px-2.5 py-1 text-left transition-colors hover:bg-zinc-900 {hasSelectedSlide ? 'text-zinc-300' : 'text-zinc-600'}"
+					>
+						<svg class="w-2.5 h-2.5 shrink-0 transition-transform duration-150 {isExpanded ? 'rotate-90' : ''}" fill="currentColor" viewBox="0 0 20 20">
+							<path fill-rule="evenodd" d="M7.293 14.707a1 1 0 010-1.414L10.586 10 7.293 6.707a1 1 0 011.414-1.414l4 4a1 1 0 010 1.414l-4 4a1 1 0 01-1.414 0z" clip-rule="evenodd" />
+						</svg>
+						<span class="text-[10px] font-medium">{category.name}</span>
+					</button>
+					<!-- Category Items -->
+					{#if isExpanded}
+						<div class="pb-0.5">
+							{#each categorySlides as slide, i}
+								{@const globalIndex = category.range[0] + i}
+								<button
+									onclick={() => (selectedSlideIndex = globalIndex)}
+									class="w-full flex items-center gap-1.5 pl-5 pr-2 py-0.5 text-left transition-colors {selectedSlideIndex === globalIndex ? 'bg-zinc-800/80 text-zinc-200' : 'text-zinc-600 hover:bg-zinc-900 hover:text-zinc-500'}"
+								>
+									<span class="w-1 h-1 rounded-full shrink-0 {selectedSlideIndex === globalIndex ? 'bg-blue-500' : 'bg-zinc-700'}"></span>
+									<span class="text-[10px] truncate">{slide.name.split(' - ')[1] || slide.name}</span>
+								</button>
+							{/each}
+						</div>
+					{/if}
+				</div>
 			{/each}
 		</div>
 	</aside>
@@ -892,129 +937,6 @@
 								<tr style="border-top: 1px solid {theme.border}"><td class="px-4 py-3 text-sm" style="color: {theme.text}">NPS</td><td class="px-4 py-3 text-sm text-right" style="color: {theme.muted}">72</td><td class="px-4 py-3 text-sm text-right" style="color: {theme.muted}">75</td><td class="px-4 py-3 text-sm text-right" style="color: {theme.muted}">78</td><td class="px-4 py-3 text-sm text-right font-medium" style="color: {theme.tertiary}">82</td></tr>
 							</tbody>
 						</table>
-					</div>
-				</div>
-
-			{:else if slides[selectedSlideIndex].id === 'buttons'}
-				<!-- Buttons - Various button styles -->
-				<div class="w-full h-full flex flex-col p-8 overflow-y-auto">
-					<button
-						onclick={() => handleColorClick(theme.text, 'Heading')}
-						class="text-2xl font-bold mb-4 hover:ring-2 hover:ring-blue-500 hover:ring-offset-4 rounded px-2 py-1 transition-all cursor-pointer self-start"
-						style="color: {theme.text}; --tw-ring-offset-color: {theme.background}"
-					>
-						Button Styles
-					</button>
-					<div class="flex-1 flex flex-col gap-4">
-						<!-- Row 1: Solid buttons -->
-						<div>
-							<div class="text-sm mb-3" style="color: {theme.muted}">Solid Buttons</div>
-							<div class="flex gap-3 flex-wrap">
-								<button onclick={() => handleColorClick(theme.accent, 'Solid primary')} class="px-5 py-2.5 rounded-lg text-sm font-semibold hover:ring-2 hover:ring-white/30 transition-all cursor-pointer" style="background-color: {theme.accent}; color: {theme.accentText}">Primary</button>
-								<button onclick={() => handleColorClick(theme.secondary, 'Solid secondary')} class="px-5 py-2.5 rounded-lg text-sm font-semibold hover:ring-2 hover:ring-white/30 transition-all cursor-pointer" style="background-color: {theme.secondary}; color: white">Secondary</button>
-								<button onclick={() => handleColorClick(theme.tertiary, 'Solid success')} class="px-5 py-2.5 rounded-lg text-sm font-semibold hover:ring-2 hover:ring-white/30 transition-all cursor-pointer" style="background-color: {theme.tertiary}; color: white">Success</button>
-								<button onclick={() => handleColorClick(theme.surface, 'Solid muted')} class="px-5 py-2.5 rounded-lg text-sm font-semibold hover:ring-2 hover:ring-blue-500 transition-all cursor-pointer" style="background-color: {theme.surface}; color: {theme.text}">Muted</button>
-								<button onclick={() => handleColorClick('#ef4444', 'Solid danger')} class="px-5 py-2.5 rounded-lg text-sm font-semibold hover:ring-2 hover:ring-white/30 transition-all cursor-pointer bg-red-500 text-white">Danger</button>
-								<button onclick={() => handleColorClick('#f59e0b', 'Solid warning')} class="px-5 py-2.5 rounded-lg text-sm font-semibold hover:ring-2 hover:ring-white/30 transition-all cursor-pointer bg-amber-500 text-white">Warning</button>
-							</div>
-						</div>
-						<!-- Row 2: Outline buttons -->
-						<div>
-							<div class="text-sm mb-3" style="color: {theme.muted}">Outline Buttons</div>
-							<div class="flex gap-3 flex-wrap">
-								<button onclick={() => handleColorClick(theme.accent, 'Outline primary')} class="px-5 py-2.5 rounded-lg text-sm font-semibold border-2 hover:ring-2 hover:ring-blue-500 transition-all cursor-pointer" style="border-color: {theme.accent}; color: {theme.accent}">Primary</button>
-								<button onclick={() => handleColorClick(theme.secondary, 'Outline secondary')} class="px-5 py-2.5 rounded-lg text-sm font-semibold border-2 hover:ring-2 hover:ring-blue-500 transition-all cursor-pointer" style="border-color: {theme.secondary}; color: {theme.secondary}">Secondary</button>
-								<button onclick={() => handleColorClick(theme.tertiary, 'Outline success')} class="px-5 py-2.5 rounded-lg text-sm font-semibold border-2 hover:ring-2 hover:ring-blue-500 transition-all cursor-pointer" style="border-color: {theme.tertiary}; color: {theme.tertiary}">Success</button>
-								<button onclick={() => handleColorClick(theme.text, 'Outline default')} class="px-5 py-2.5 rounded-lg text-sm font-semibold border-2 hover:ring-2 hover:ring-blue-500 transition-all cursor-pointer" style="border-color: {theme.border}; color: {theme.text}">Default</button>
-								<button onclick={() => handleColorClick('#ef4444', 'Outline danger')} class="px-5 py-2.5 rounded-lg text-sm font-semibold border-2 hover:ring-2 hover:ring-blue-500 transition-all cursor-pointer border-red-500 text-red-500">Danger</button>
-							</div>
-						</div>
-						<!-- Row 3: Ghost/Tinted buttons -->
-						<div>
-							<div class="text-sm mb-3" style="color: {theme.muted}">Ghost / Tinted Buttons</div>
-							<div class="flex gap-3 flex-wrap">
-								<button onclick={() => handleColorClick(theme.accent, 'Ghost primary')} class="px-5 py-2.5 rounded-lg text-sm font-semibold hover:ring-2 hover:ring-blue-500 transition-all cursor-pointer" style="background-color: {hexToRgba(theme.accent, 0.1)}; color: {theme.accent}">Primary</button>
-								<button onclick={() => handleColorClick(theme.secondary, 'Ghost secondary')} class="px-5 py-2.5 rounded-lg text-sm font-semibold hover:ring-2 hover:ring-blue-500 transition-all cursor-pointer" style="background-color: {hexToRgba(theme.secondary, 0.1)}; color: {theme.secondary}">Secondary</button>
-								<button onclick={() => handleColorClick(theme.tertiary, 'Ghost success')} class="px-5 py-2.5 rounded-lg text-sm font-semibold hover:ring-2 hover:ring-blue-500 transition-all cursor-pointer" style="background-color: {hexToRgba(theme.tertiary, 0.1)}; color: {theme.tertiary}">Success</button>
-								<button onclick={() => handleColorClick('#ef4444', 'Ghost danger')} class="px-5 py-2.5 rounded-lg text-sm font-semibold hover:ring-2 hover:ring-blue-500 transition-all cursor-pointer bg-red-500/10 text-red-500">Danger</button>
-								<button onclick={() => handleColorClick(theme.text, 'Ghost text')} class="px-5 py-2.5 rounded-lg text-sm font-semibold hover:ring-2 hover:ring-blue-500 transition-all cursor-pointer" style="color: {theme.text}">Text Only</button>
-							</div>
-						</div>
-						<!-- Row 4: Icon buttons -->
-						<div>
-							<div class="text-sm mb-3" style="color: {theme.muted}">Icon Buttons</div>
-							<div class="flex gap-3 flex-wrap items-center">
-								<button onclick={() => handleColorClick(theme.accent, 'Icon left')} class="inline-flex items-center gap-2 px-5 py-2.5 rounded-lg text-sm font-semibold hover:ring-2 hover:ring-white/30 transition-all cursor-pointer" style="background-color: {theme.accent}; color: {theme.accentText}">
-									<svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4" /></svg>
-									Add New
-								</button>
-								<button onclick={() => handleColorClick(theme.secondary, 'Icon right')} class="inline-flex items-center gap-2 px-5 py-2.5 rounded-lg text-sm font-semibold hover:ring-2 hover:ring-white/30 transition-all cursor-pointer" style="background-color: {theme.secondary}; color: white">
-									Next
-									<svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M14 5l7 7m0 0l-7 7m7-7H3" /></svg>
-								</button>
-								<button onclick={() => handleColorClick(theme.tertiary, 'Download')} class="inline-flex items-center gap-2 px-5 py-2.5 rounded-lg text-sm font-semibold hover:ring-2 hover:ring-white/30 transition-all cursor-pointer" style="background-color: {theme.tertiary}; color: white">
-									<svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4" /></svg>
-									Download
-								</button>
-								<button onclick={() => handleColorClick(theme.accent, 'Upload outline')} class="inline-flex items-center gap-2 px-5 py-2.5 rounded-lg text-sm font-semibold border-2 hover:ring-2 hover:ring-blue-500 transition-all cursor-pointer" style="border-color: {theme.accent}; color: {theme.accent}">
-									<svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-8l-4-4m0 0L8 8m4-4v12" /></svg>
-									Upload
-								</button>
-							</div>
-						</div>
-						<!-- Row 5: Icon only buttons -->
-						<div>
-							<div class="text-sm mb-3" style="color: {theme.muted}">Icon Only</div>
-							<div class="flex gap-3 flex-wrap items-center">
-								<button onclick={() => handleColorClick(theme.accent, 'Circle add')} class="w-10 h-10 rounded-full flex items-center justify-center hover:ring-2 hover:ring-white/30 transition-all cursor-pointer" style="background-color: {theme.accent}; color: {theme.accentText}">
-									<svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4" /></svg>
-								</button>
-								<button onclick={() => handleColorClick(theme.secondary, 'Circle edit')} class="w-10 h-10 rounded-full flex items-center justify-center hover:ring-2 hover:ring-white/30 transition-all cursor-pointer" style="background-color: {theme.secondary}; color: white">
-									<svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z" /></svg>
-								</button>
-								<button onclick={() => handleColorClick(theme.tertiary, 'Circle check')} class="w-10 h-10 rounded-full flex items-center justify-center hover:ring-2 hover:ring-white/30 transition-all cursor-pointer" style="background-color: {theme.tertiary}; color: white">
-									<svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7" /></svg>
-								</button>
-								<button onclick={() => handleColorClick('#ef4444', 'Circle delete')} class="w-10 h-10 rounded-full flex items-center justify-center hover:ring-2 hover:ring-white/30 transition-all cursor-pointer bg-red-500 text-white">
-									<svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" /></svg>
-								</button>
-								<button onclick={() => handleColorClick(theme.surface, 'Square menu')} class="w-10 h-10 rounded-lg flex items-center justify-center hover:ring-2 hover:ring-blue-500 transition-all cursor-pointer" style="background-color: {theme.surface}; color: {theme.text}">
-									<svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16" /></svg>
-								</button>
-								<button onclick={() => handleColorClick(theme.surface, 'Square grid')} class="w-10 h-10 rounded-lg flex items-center justify-center hover:ring-2 hover:ring-blue-500 transition-all cursor-pointer" style="background-color: {theme.surface}; color: {theme.text}">
-									<svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2H6a2 2 0 01-2-2V6zM14 6a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2h-2a2 2 0 01-2-2V6zM4 16a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2H6a2 2 0 01-2-2v-2zM14 16a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2h-2a2 2 0 01-2-2v-2z" /></svg>
-								</button>
-								<button onclick={() => handleColorClick(theme.accent, 'Outline icon')} class="w-10 h-10 rounded-lg flex items-center justify-center border-2 hover:ring-2 hover:ring-blue-500 transition-all cursor-pointer" style="border-color: {theme.accent}; color: {theme.accent}">
-									<svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" /></svg>
-								</button>
-								<button onclick={() => handleColorClick(theme.secondary, 'Outline icon')} class="w-10 h-10 rounded-lg flex items-center justify-center border-2 hover:ring-2 hover:ring-blue-500 transition-all cursor-pointer" style="border-color: {theme.secondary}; color: {theme.secondary}">
-									<svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10.325 4.317c.426-1.756 2.924-1.756 3.35 0a1.724 1.724 0 002.573 1.066c1.543-.94 3.31.826 2.37 2.37a1.724 1.724 0 001.065 2.572c1.756.426 1.756 2.924 0 3.35a1.724 1.724 0 00-1.066 2.573c.94 1.543-.826 3.31-2.37 2.37a1.724 1.724 0 00-2.572 1.065c-.426 1.756-2.924 1.756-3.35 0a1.724 1.724 0 00-2.573-1.066c-1.543.94-3.31-.826-2.37-2.37a1.724 1.724 0 00-1.065-2.572c-1.756-.426-1.756-2.924 0-3.35a1.724 1.724 0 001.066-2.573c-.94-1.543.826-3.31 2.37-2.37.996.608 2.296.07 2.572-1.065z" /><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" /></svg>
-								</button>
-							</div>
-						</div>
-						<!-- Row 6: Special buttons -->
-						<div>
-							<div class="text-sm mb-3" style="color: {theme.muted}">Gradients & Effects</div>
-							<div class="flex gap-3 flex-wrap items-center">
-								<button onclick={() => handleColorClick(theme.accent, 'Gradient')} class="px-5 py-2.5 rounded-lg text-sm font-semibold text-white hover:ring-2 hover:ring-white/30 transition-all cursor-pointer" style="background: linear-gradient(135deg, {theme.accent}, {theme.secondary})">Gradient</button>
-								<button onclick={() => handleColorClick(theme.secondary, 'Gradient 2')} class="px-5 py-2.5 rounded-lg text-sm font-semibold text-white hover:ring-2 hover:ring-white/30 transition-all cursor-pointer" style="background: linear-gradient(135deg, {theme.secondary}, {theme.tertiary})">Gradient 2</button>
-								<button onclick={() => handleColorClick(theme.tertiary, 'Gradient 3')} class="px-5 py-2.5 rounded-lg text-sm font-semibold text-white hover:ring-2 hover:ring-white/30 transition-all cursor-pointer" style="background: linear-gradient(135deg, {theme.tertiary}, {theme.accent})">Gradient 3</button>
-								<button onclick={() => handleColorClick(theme.accent, 'Neon')} class="px-5 py-2.5 rounded-lg text-sm font-semibold border-2 hover:ring-2 hover:ring-white/30 transition-all cursor-pointer" style="border-color: {theme.accent}; color: {theme.accent}; background-color: {hexToRgba(theme.accent, 0.1)}; box-shadow: 0 0 15px {hexToRgba(theme.accent, 0.3)}">Neon</button>
-								<button onclick={() => handleColorClick(theme.secondary, 'Neon 2')} class="px-5 py-2.5 rounded-lg text-sm font-semibold border-2 hover:ring-2 hover:ring-white/30 transition-all cursor-pointer" style="border-color: {theme.secondary}; color: {theme.secondary}; background-color: {hexToRgba(theme.secondary, 0.1)}; box-shadow: 0 0 15px {hexToRgba(theme.secondary, 0.3)}">Neon 2</button>
-								<button onclick={() => handleColorClick(theme.tertiary, 'Neon 3')} class="px-5 py-2.5 rounded-lg text-sm font-semibold border-2 hover:ring-2 hover:ring-white/30 transition-all cursor-pointer" style="border-color: {theme.tertiary}; color: {theme.tertiary}; background-color: {hexToRgba(theme.tertiary, 0.1)}; box-shadow: 0 0 15px {hexToRgba(theme.tertiary, 0.3)}">Neon 3</button>
-							</div>
-						</div>
-						<!-- Row 7: Button sizes -->
-						<div>
-							<div class="text-sm mb-3" style="color: {theme.muted}">Button Sizes</div>
-							<div class="flex gap-3 flex-wrap items-center">
-								<button onclick={() => handleColorClick(theme.accent, 'XS button')} class="px-2.5 py-1 rounded text-xs font-semibold hover:ring-2 hover:ring-white/30 transition-all cursor-pointer" style="background-color: {theme.accent}; color: {theme.accentText}">Extra Small</button>
-								<button onclick={() => handleColorClick(theme.accent, 'SM button')} class="px-3.5 py-1.5 rounded-md text-xs font-semibold hover:ring-2 hover:ring-white/30 transition-all cursor-pointer" style="background-color: {theme.accent}; color: {theme.accentText}">Small</button>
-								<button onclick={() => handleColorClick(theme.accent, 'MD button')} class="px-5 py-2.5 rounded-lg text-sm font-semibold hover:ring-2 hover:ring-white/30 transition-all cursor-pointer" style="background-color: {theme.accent}; color: {theme.accentText}">Medium</button>
-								<button onclick={() => handleColorClick(theme.accent, 'LG button')} class="px-6 py-3 rounded-lg text-base font-semibold hover:ring-2 hover:ring-white/30 transition-all cursor-pointer" style="background-color: {theme.accent}; color: {theme.accentText}">Large</button>
-								<button onclick={() => handleColorClick(theme.accent, 'XL button')} class="px-8 py-4 rounded-xl text-lg font-semibold hover:ring-2 hover:ring-white/30 transition-all cursor-pointer" style="background-color: {theme.accent}; color: {theme.accentText}">Extra Large</button>
-							</div>
-						</div>
 					</div>
 				</div>
 
