@@ -300,6 +300,17 @@
 	let pngMenuOpen = $state(false);
 	let colorPickerTab = $state<'solid' | 'gradient'>('solid');
 
+	// Random gradient options
+	type GradientOption = { start: string; end: string; angle: number; name: string };
+	let randomOptions = $state<GradientOption[]>([]);
+
+	// Initialize random options when switching to gradient tab
+	$effect(() => {
+		if (colorPickerTab === 'gradient' && randomOptions.length === 0) {
+			randomOptions = Array.from({ length: 5 }, () => generateRandomGradient());
+		}
+	});
+
 	// Preset gradients
 	const presetGradients = [
 		// Warm gradients
@@ -354,14 +365,14 @@
 		!['Slate', 'Gray', 'Zinc', 'Neutral', 'Stone'].includes(g.name)
 	);
 
-	function randomizeGradient() {
-		// Pick a random strategy with more variety
+	function generateRandomGradient(): GradientOption {
 		const strategy = Math.random();
 		const numGroups = chromaticGroups.length;
-		const shadeOptions = [3, 4, 5, 6, 7]; // 300-700 look best for cross-color
+		const shadeOptions = [3, 4, 5, 6, 7];
+		const angles = [135, 180, 45, 90, 0];
+		const angle = angles[Math.floor(Math.random() * angles.length)];
 
 		if (strategy < 0.15) {
-			// Monochromatic - same color group, different shades
 			const group = chromaticGroups[Math.floor(Math.random() * numGroups)];
 			const shadeIndices = [2, 3, 4, 5, 6, 7, 8];
 			const startIdx = shadeIndices[Math.floor(Math.random() * shadeIndices.length)];
@@ -369,59 +380,46 @@
 			while (Math.abs(endIdx - startIdx) < 2) {
 				endIdx = shadeIndices[Math.floor(Math.random() * shadeIndices.length)];
 			}
-			gradientStart = group.colors[Math.min(startIdx, endIdx)].hex;
-			gradientEnd = group.colors[Math.max(startIdx, endIdx)].hex;
-			showToast(`${group.name}`);
+			return { start: group.colors[Math.min(startIdx, endIdx)].hex, end: group.colors[Math.max(startIdx, endIdx)].hex, angle, name: group.name };
 		} else if (strategy < 0.30) {
-			// Analogous - adjacent colors (1-2 steps apart)
 			const groupIdx = Math.floor(Math.random() * numGroups);
 			const offset = Math.random() < 0.5 ? 1 : 2;
 			const direction = Math.random() < 0.5 ? 1 : -1;
 			const adjacentIdx = (groupIdx + offset * direction + numGroups) % numGroups;
-			gradientStart = chromaticGroups[groupIdx].colors[shadeOptions[Math.floor(Math.random() * shadeOptions.length)]].hex;
-			gradientEnd = chromaticGroups[adjacentIdx].colors[shadeOptions[Math.floor(Math.random() * shadeOptions.length)]].hex;
-			showToast(`${chromaticGroups[groupIdx].name} → ${chromaticGroups[adjacentIdx].name}`);
+			return { start: chromaticGroups[groupIdx].colors[shadeOptions[Math.floor(Math.random() * shadeOptions.length)]].hex, end: chromaticGroups[adjacentIdx].colors[shadeOptions[Math.floor(Math.random() * shadeOptions.length)]].hex, angle, name: `${chromaticGroups[groupIdx].name} → ${chromaticGroups[adjacentIdx].name}` };
 		} else if (strategy < 0.50) {
-			// Complementary - opposite on color wheel (~8-9 steps in 17-color wheel)
 			const groupIdx = Math.floor(Math.random() * numGroups);
 			const complementaryIdx = (groupIdx + Math.floor(numGroups / 2) + (Math.random() < 0.5 ? 0 : 1)) % numGroups;
-			gradientStart = chromaticGroups[groupIdx].colors[shadeOptions[Math.floor(Math.random() * shadeOptions.length)]].hex;
-			gradientEnd = chromaticGroups[complementaryIdx].colors[shadeOptions[Math.floor(Math.random() * shadeOptions.length)]].hex;
-			showToast(`${chromaticGroups[groupIdx].name} ↔ ${chromaticGroups[complementaryIdx].name}`);
+			return { start: chromaticGroups[groupIdx].colors[shadeOptions[Math.floor(Math.random() * shadeOptions.length)]].hex, end: chromaticGroups[complementaryIdx].colors[shadeOptions[Math.floor(Math.random() * shadeOptions.length)]].hex, angle, name: `${chromaticGroups[groupIdx].name} ↔ ${chromaticGroups[complementaryIdx].name}` };
 		} else if (strategy < 0.65) {
-			// Split-complementary - 4-6 steps apart for interesting combinations
 			const groupIdx = Math.floor(Math.random() * numGroups);
-			const offset = 4 + Math.floor(Math.random() * 3); // 4, 5, or 6 steps
+			const offset = 4 + Math.floor(Math.random() * 3);
 			const direction = Math.random() < 0.5 ? 1 : -1;
 			const splitIdx = (groupIdx + offset * direction + numGroups) % numGroups;
-			gradientStart = chromaticGroups[groupIdx].colors[shadeOptions[Math.floor(Math.random() * shadeOptions.length)]].hex;
-			gradientEnd = chromaticGroups[splitIdx].colors[shadeOptions[Math.floor(Math.random() * shadeOptions.length)]].hex;
-			showToast(`${chromaticGroups[groupIdx].name} → ${chromaticGroups[splitIdx].name}`);
+			return { start: chromaticGroups[groupIdx].colors[shadeOptions[Math.floor(Math.random() * shadeOptions.length)]].hex, end: chromaticGroups[splitIdx].colors[shadeOptions[Math.floor(Math.random() * shadeOptions.length)]].hex, angle, name: `${chromaticGroups[groupIdx].name} → ${chromaticGroups[splitIdx].name}` };
 		} else if (strategy < 0.80) {
-			// Triadic - 1/3 around the wheel (~5-6 steps)
 			const groupIdx = Math.floor(Math.random() * numGroups);
 			const triadicOffset = Math.floor(numGroups / 3);
 			const direction = Math.random() < 0.5 ? 1 : -1;
 			const triadicIdx = (groupIdx + triadicOffset * direction + numGroups) % numGroups;
-			gradientStart = chromaticGroups[groupIdx].colors[shadeOptions[Math.floor(Math.random() * shadeOptions.length)]].hex;
-			gradientEnd = chromaticGroups[triadicIdx].colors[shadeOptions[Math.floor(Math.random() * shadeOptions.length)]].hex;
-			showToast(`${chromaticGroups[groupIdx].name} △ ${chromaticGroups[triadicIdx].name}`);
+			return { start: chromaticGroups[groupIdx].colors[shadeOptions[Math.floor(Math.random() * shadeOptions.length)]].hex, end: chromaticGroups[triadicIdx].colors[shadeOptions[Math.floor(Math.random() * shadeOptions.length)]].hex, angle, name: `${chromaticGroups[groupIdx].name} △ ${chromaticGroups[triadicIdx].name}` };
 		} else {
-			// Random preset (curated combinations)
 			const preset = presetGradients[Math.floor(Math.random() * presetGradients.length)];
-			gradientStart = preset.start;
-			gradientEnd = preset.end;
-			gradientAngle = preset.angle;
-			showToast(preset.name);
-			fillMode = 'gradient';
-			return;
+			return { start: preset.start, end: preset.end, angle: preset.angle, name: preset.name };
 		}
+	}
 
-		// Random angle
-		const angles = [135, 180, 45, 90, 0];
-		gradientAngle = angles[Math.floor(Math.random() * angles.length)];
+	function refreshRandomOptions() {
+		randomOptions = Array.from({ length: 5 }, () => generateRandomGradient());
+	}
+
+	function applyRandomOption(option: GradientOption) {
+		gradientStart = option.start;
+		gradientEnd = option.end;
+		gradientAngle = option.angle;
 		gradientType = 'linear';
 		fillMode = 'gradient';
+		showToast(option.name);
 	}
 
 	function handleQuickColor(hex: string) {
@@ -901,16 +899,26 @@
 								{/each}
 							</div>
 						{:else}
-							<!-- Randomize Button -->
-							<button
-								onclick={randomizeGradient}
-								class="w-full h-7 mb-2 rounded text-[10px] font-medium bg-zinc-700 text-zinc-200 hover:bg-zinc-600 transition-colors flex items-center justify-center gap-1.5"
-							>
-								<svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-									<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15" />
-								</svg>
-								Randomize
-							</button>
+							<!-- Random Options -->
+							<div class="flex gap-1 mb-2">
+								{#each randomOptions as option}
+									<button
+										onclick={() => applyRandomOption(option)}
+										class="flex-1 h-7 rounded hover:scale-105 hover:z-10 transition-transform"
+										style="background: linear-gradient({option.angle}deg, {option.start}, {option.end})"
+										title={option.name}
+									></button>
+								{/each}
+								<button
+									onclick={refreshRandomOptions}
+									class="w-7 h-7 rounded bg-zinc-700 text-zinc-400 hover:text-zinc-200 hover:bg-zinc-600 transition-colors flex items-center justify-center shrink-0"
+									title="Refresh random options"
+								>
+									<svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+										<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15" />
+									</svg>
+								</button>
+							</div>
 							<!-- Gradient Presets -->
 							<div class="grid grid-cols-3 gap-1 max-h-48 overflow-y-auto">
 								{#each presetGradients as preset}
