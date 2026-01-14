@@ -203,6 +203,19 @@
 		}
 	}
 
+	function handleDownloadSvg() {
+		if (!processedSvg) return;
+		const blob = new Blob([processedSvg], { type: 'image/svg+xml' });
+		const url = URL.createObjectURL(blob);
+		const a = document.createElement('a');
+		a.href = url;
+		a.download = `icon-${iconSize}px.svg`;
+		a.click();
+		URL.revokeObjectURL(url);
+		showToast('SVG downloaded');
+		svgMenuOpen = false;
+	}
+
 	async function handleCopyPng() {
 		if (!processedSvg) return;
 		try {
@@ -231,6 +244,7 @@
 		pngMenuOpen = false;
 	}
 
+	let svgMenuOpen = $state(false);
 	let pngMenuOpen = $state(false);
 	let colorPickerTab = $state<'solid' | 'gradient'>('solid');
 
@@ -463,23 +477,48 @@
 	<div class="flex-1"></div>
 
 	<div class="flex items-center gap-2">
-		<button
-			onclick={handleCopySvg}
-			disabled={!processedSvg}
-			class="inline-flex items-center gap-1.5 px-2.5 py-1.5 h-7 rounded-md text-xs font-medium transition-colors {processedSvg
-				? 'text-zinc-300 hover:bg-zinc-800'
-				: 'text-zinc-600 cursor-not-allowed'}"
-		>
-			<svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-				<path
-					stroke-linecap="round"
-					stroke-linejoin="round"
-					stroke-width="2"
-					d="M8 16H6a2 2 0 01-2-2V6a2 2 0 012-2h8a2 2 0 012 2v2m-6 12h8a2 2 0 002-2v-8a2 2 0 00-2-2h-8a2 2 0 00-2 2v8a2 2 0 002 2z"
-				/>
-			</svg>
-			Copy SVG
-		</button>
+		<div class="relative">
+			<div class="flex">
+				<button
+					onclick={handleCopySvg}
+					disabled={!processedSvg}
+					class="inline-flex items-center gap-1.5 pl-2.5 pr-2 py-1.5 h-7 rounded-l-md text-xs font-medium transition-colors {processedSvg
+						? 'bg-zinc-800 text-zinc-200 hover:bg-zinc-700'
+						: 'bg-zinc-800/50 text-zinc-600 cursor-not-allowed'}"
+				>
+					<svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+						<path
+							stroke-linecap="round"
+							stroke-linejoin="round"
+							stroke-width="2"
+							d="M8 16H6a2 2 0 01-2-2V6a2 2 0 012-2h8a2 2 0 012 2v2m-6 12h8a2 2 0 002-2v-8a2 2 0 00-2-2h-8a2 2 0 00-2 2v8a2 2 0 002 2z"
+						/>
+					</svg>
+					SVG
+				</button>
+				<button
+					onclick={() => (svgMenuOpen = !svgMenuOpen)}
+					disabled={!processedSvg}
+					class="inline-flex items-center px-1.5 py-1.5 h-7 rounded-r-md border-l border-zinc-700 text-xs font-medium transition-colors {processedSvg
+						? 'bg-zinc-800 text-zinc-200 hover:bg-zinc-700'
+						: 'bg-zinc-800/50 text-zinc-600 cursor-not-allowed'}"
+				>
+					<svg class="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+						<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7" />
+					</svg>
+				</button>
+			</div>
+			{#if svgMenuOpen}
+				<div class="absolute right-0 top-full mt-1 py-1 bg-zinc-800 border border-zinc-700 rounded-md shadow-xl z-50 whitespace-nowrap">
+					<button
+						onclick={handleDownloadSvg}
+						class="w-full px-3 py-1.5 text-left text-xs text-zinc-300 hover:bg-zinc-700 transition-colors"
+					>
+						Download SVG
+					</button>
+				</div>
+			{/if}
+		</div>
 
 		<div class="relative">
 			<div class="flex">
