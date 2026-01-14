@@ -31,7 +31,14 @@
 	let searchPreviewSize = $state<number>(88);
 	let searchFilter = $state<string>('');
 	let searchInputRef = $state<HTMLInputElement | null>(null);
+	let searchHoveredIcon = $state<string | null>(null);
 	let searchDebounceTimer: ReturnType<typeof setTimeout>;
+
+	// Get friendly name for icon set prefix
+	function getIconSetName(prefix: string): string {
+		const set = iconSets.find(s => s.prefix === prefix);
+		return set?.name || prefix;
+	}
 
 	// Focus search input when modal opens
 	$effect(() => {
@@ -890,8 +897,9 @@
 							{@const [prefix, name] = icon.split(':')}
 							<button
 								onclick={() => selectIcon(icon)}
+								onmouseenter={() => (searchHoveredIcon = icon)}
+								onmouseleave={() => (searchHoveredIcon = null)}
 								class="group aspect-square flex flex-col items-center justify-center p-2 rounded-lg bg-zinc-800/50 hover:bg-zinc-700 border border-zinc-700/50 hover:border-zinc-600 transition-all"
-								title={icon}
 							>
 								<img
 									src="https://api.iconify.design/{prefix}/{name}.svg"
@@ -920,11 +928,19 @@
 				{/if}
 			</div>
 
-			<!-- Footer hint -->
-			<div class="px-4 py-2 border-t border-zinc-800 bg-zinc-900/50">
-				<p class="text-[10px] text-zinc-600 text-center">
-					Powered by <a href="https://iconify.design" target="_blank" class="text-zinc-500 hover:text-zinc-400">Iconify</a> — Click an icon to insert
-				</p>
+			<!-- Footer hint / hover details -->
+			<div class="px-4 py-2 border-t border-zinc-800 bg-zinc-900/50 h-9 flex items-center justify-center">
+				{#if searchHoveredIcon}
+					{@const [prefix, name] = searchHoveredIcon.split(':')}
+					<div class="flex items-center gap-2 text-xs">
+						<span class="px-1.5 py-0.5 rounded bg-zinc-700 text-zinc-300 font-medium">{getIconSetName(prefix)}</span>
+						<span class="text-zinc-400">{name}</span>
+					</div>
+				{:else}
+					<p class="text-[10px] text-zinc-600">
+						Powered by <a href="https://iconify.design" target="_blank" class="text-zinc-500 hover:text-zinc-400">Iconify</a> — Click an icon to insert
+					</p>
+				{/if}
 			</div>
 		</div>
 	</div>
