@@ -22,6 +22,70 @@
 	let gradientAngle = $state<number>(180);
 	let rightSidebarOpen = $state<boolean>(true);
 
+	// Icon search state
+	let searchOpen = $state<boolean>(false);
+	let searchQuery = $state<string>('');
+	let searchResults = $state<string[]>([]);
+	let searchLoading = $state<boolean>(false);
+	let searchTotal = $state<number>(0);
+	let searchDebounceTimer: ReturnType<typeof setTimeout>;
+
+	// Iconify API functions
+	async function searchIcons(query: string) {
+		if (!query.trim()) {
+			searchResults = [];
+			searchTotal = 0;
+			return;
+		}
+		searchLoading = true;
+		try {
+			const res = await fetch(`https://api.iconify.design/search?query=${encodeURIComponent(query)}&limit=100`);
+			const data = await res.json();
+			searchResults = data.icons || [];
+			searchTotal = data.total || 0;
+		} catch {
+			searchResults = [];
+			searchTotal = 0;
+		}
+		searchLoading = false;
+	}
+
+	async function fetchIconSvg(iconName: string) {
+		const [prefix, name] = iconName.split(':');
+		try {
+			const res = await fetch(`https://api.iconify.design/${prefix}/${name}.svg`);
+			const svg = await res.text();
+			return svg;
+		} catch {
+			return null;
+		}
+	}
+
+	async function selectIcon(iconName: string) {
+		const svg = await fetchIconSvg(iconName);
+		if (svg) {
+			const parsed = parseSvgContent(svg);
+			if (parsed) {
+				svgContent = parsed;
+				searchOpen = false;
+				searchQuery = '';
+				searchResults = [];
+				showToast(`Loaded: ${iconName}`);
+			}
+		}
+	}
+
+	function handleSearchInput(query: string) {
+		clearTimeout(searchDebounceTimer);
+		searchDebounceTimer = setTimeout(() => {
+			searchIcons(query);
+		}, 300);
+	}
+
+	$effect(() => {
+		handleSearchInput(searchQuery);
+	});
+
 	// Toast state
 	let toastMessage = $state<string | null>(null);
 	let toastTimeout: ReturnType<typeof setTimeout>;
@@ -154,8 +218,24 @@
 		showToast(`Color: ${hex}`);
 	}
 
-	// Handle keyboard paste (Ctrl+V / Cmd+V)
+	// Handle keyboard shortcuts
 	function handleKeydown(event: KeyboardEvent) {
+		// Escape to close search modal
+		if (event.key === 'Escape' && searchOpen) {
+			searchOpen = false;
+			searchQuery = '';
+			searchResults = [];
+			return;
+		}
+
+		// Ctrl/Cmd+K to open search
+		if ((event.ctrlKey || event.metaKey) && event.key === 'k') {
+			event.preventDefault();
+			searchOpen = true;
+			return;
+		}
+
+		// Ctrl+V / Cmd+V to paste SVG
 		if ((event.ctrlKey || event.metaKey) && event.key === 'v') {
 			// Only handle if not in an input field
 			const target = event.target as HTMLElement;
@@ -176,6 +256,16 @@
 <!-- Toolbar -->
 <header class="h-11 bg-zinc-900 border-b border-zinc-800 flex items-center px-3 shrink-0">
 	<div class="flex items-center gap-2">
+		<button
+			onclick={() => (searchOpen = true)}
+			class="inline-flex items-center gap-1.5 px-2.5 py-1.5 h-7 rounded-md text-xs font-medium bg-blue-600 text-white hover:bg-blue-500 transition-colors"
+		>
+			<svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+				<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
+			</svg>
+			Search Icons
+		</button>
+
 		<button
 			onclick={handlePaste}
 			class="inline-flex items-center gap-1.5 px-2.5 py-1.5 h-7 rounded-md text-xs font-medium bg-zinc-800 text-zinc-200 hover:bg-zinc-700 transition-colors"
@@ -588,6 +678,98 @@
 		</aside>
 	{/if}
 </div>
+
+<!-- Icon Search Modal -->
+{#if searchOpen}
+	<div class="fixed inset-0 z-50 flex items-start justify-center pt-16">
+		<!-- Backdrop -->
+		<button
+			class="absolute inset-0 bg-black/70"
+			onclick={() => {
+				searchOpen = false;
+				searchQuery = '';
+				searchResults = [];
+			}}
+		></button>
+
+		<!-- Modal -->
+		<div class="relative w-full max-w-3xl mx-4 bg-zinc-900 border border-zinc-700 rounded-xl shadow-2xl overflow-hidden">
+			<!-- Search Header -->
+			<div class="p-4 border-b border-zinc-800">
+				<div class="relative">
+					<svg class="absolute left-3 top-1/2 -translate-y-1/2 w-5 h-5 text-zinc-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+						<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
+					</svg>
+					<input
+						type="text"
+						bind:value={searchQuery}
+						placeholder="Search 200,000+ icons from Iconify..."
+						class="w-full h-12 pl-11 pr-4 rounded-lg bg-zinc-800 border border-zinc-700 text-zinc-100 placeholder-zinc-500 text-base focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+						autofocus
+					/>
+					{#if searchLoading}
+						<div class="absolute right-3 top-1/2 -translate-y-1/2">
+							<svg class="w-5 h-5 text-zinc-500 animate-spin" fill="none" viewBox="0 0 24 24">
+								<circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
+								<path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
+							</svg>
+						</div>
+					{/if}
+				</div>
+				{#if searchResults.length > 0}
+					<p class="mt-2 text-xs text-zinc-500">
+						Showing {searchResults.length} of {searchTotal.toLocaleString()} results
+					</p>
+				{/if}
+			</div>
+
+			<!-- Results -->
+			<div class="max-h-[60vh] overflow-y-auto p-4">
+				{#if searchResults.length > 0}
+					<div class="grid grid-cols-6 sm:grid-cols-8 md:grid-cols-10 gap-2">
+						{#each searchResults as icon}
+							{@const [prefix, name] = icon.split(':')}
+							<button
+								onclick={() => selectIcon(icon)}
+								class="group aspect-square flex flex-col items-center justify-center p-2 rounded-lg bg-zinc-800/50 hover:bg-zinc-700 border border-zinc-700/50 hover:border-zinc-600 transition-all"
+								title={icon}
+							>
+								<img
+									src="https://api.iconify.design/{prefix}/{name}.svg"
+									alt={icon}
+									class="w-6 h-6 opacity-80 group-hover:opacity-100 group-hover:scale-110 transition-all"
+									style="filter: invert(1);"
+								/>
+							</button>
+						{/each}
+					</div>
+				{:else if searchQuery && !searchLoading}
+					<div class="text-center py-12 text-zinc-500">
+						<svg class="w-12 h-12 mx-auto mb-3 opacity-50" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+							<path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M9.172 16.172a4 4 0 015.656 0M9 10h.01M15 10h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+						</svg>
+						<p class="text-sm">No icons found for "{searchQuery}"</p>
+					</div>
+				{:else}
+					<div class="text-center py-12 text-zinc-500">
+						<svg class="w-12 h-12 mx-auto mb-3 opacity-50" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+							<path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
+						</svg>
+						<p class="text-sm">Search for icons by name</p>
+						<p class="text-xs mt-1 text-zinc-600">Try "arrow", "home", "user", "settings"...</p>
+					</div>
+				{/if}
+			</div>
+
+			<!-- Footer hint -->
+			<div class="px-4 py-2 border-t border-zinc-800 bg-zinc-900/50">
+				<p class="text-[10px] text-zinc-600 text-center">
+					Powered by <a href="https://iconify.design" target="_blank" class="text-zinc-500 hover:text-zinc-400">Iconify</a> — Click an icon to insert
+				</p>
+			</div>
+		</div>
+	</div>
+{/if}
 
 <!-- Toast -->
 {#if toastMessage}
