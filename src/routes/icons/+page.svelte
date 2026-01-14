@@ -211,8 +211,10 @@
 
 		let result = svgContent;
 
-		// Apply color or gradient
-		if (fillMode === 'solid') {
+		// Apply color or gradient (use hovered gradient for preview if set)
+		if (hoveredGradient) {
+			result = applyGradient(result, 'linear', hoveredGradient.start, hoveredGradient.end, hoveredGradient.angle);
+		} else if (fillMode === 'solid') {
 			result = applySolidColor(result, solidColor);
 		} else {
 			result = applyGradient(result, gradientType, gradientStart, gradientEnd, gradientAngle);
@@ -223,6 +225,13 @@
 
 		return result;
 	});
+
+	// Generate mini preview SVG for a gradient option
+	function getGradientPreviewSvg(option: GradientOption): string {
+		if (!svgContent) return '';
+		let result = applyGradient(svgContent, 'linear', option.start, option.end, option.angle);
+		return setSvgSize(result, 24);
+	}
 
 	function showToast(message: string) {
 		toastMessage = message;
@@ -303,6 +312,7 @@
 	// Random gradient options
 	type GradientOption = { start: string; end: string; angle: number; name: string };
 	let randomOptions = $state<GradientOption[]>([]);
+	let hoveredGradient = $state<GradientOption | null>(null);
 
 	// Initialize random options when switching to gradient tab
 	$effect(() => {
@@ -904,10 +914,16 @@
 								{#each randomOptions as option}
 									<button
 										onclick={() => applyRandomOption(option)}
-										class="flex-1 h-7 rounded hover:scale-105 hover:z-10 transition-transform"
+										onmouseenter={() => (hoveredGradient = option)}
+										onmouseleave={() => (hoveredGradient = null)}
+										class="flex-1 h-7 rounded hover:scale-110 hover:z-10 transition-transform flex items-center justify-center"
 										style="background: linear-gradient({option.angle}deg, {option.start}, {option.end})"
 										title={option.name}
-									></button>
+									>
+										{#if svgContent}
+											{@html getGradientPreviewSvg(option)}
+										{/if}
+									</button>
 								{/each}
 								<button
 									onclick={refreshRandomOptions}
