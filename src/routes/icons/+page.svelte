@@ -28,7 +28,7 @@
 	let searchResults = $state<string[]>([]);
 	let searchLoading = $state<boolean>(false);
 	let searchTotal = $state<number>(0);
-	let searchPreviewSize = $state<number>(48);
+	let searchPreviewSize = $state<number>(88);
 	let searchFilter = $state<string>('');
 	let searchInputRef = $state<HTMLInputElement | null>(null);
 	let searchDebounceTimer: ReturnType<typeof setTimeout>;
