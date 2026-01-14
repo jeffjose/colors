@@ -32,13 +32,40 @@
 	let searchFilter = $state<string>('');
 	let searchInputRef = $state<HTMLInputElement | null>(null);
 	let searchHoveredIcon = $state<string | null>(null);
+	let searchCollections = $state<Record<string, { name: string; total: number }>>({});
 	let searchDebounceTimer: ReturnType<typeof setTimeout>;
 
 	// Get friendly name for icon set prefix
 	function getIconSetName(prefix: string): string {
+		// First check collections from search results
+		if (searchCollections[prefix]?.name) {
+			return searchCollections[prefix].name;
+		}
+		// Fallback to static list
 		const set = iconSets.find(s => s.prefix === prefix);
 		return set?.name || prefix;
 	}
+
+	// Dynamic filter options based on search results
+	const availableFilters = $derived.by(() => {
+		const filters: { prefix: string; name: string; count: number }[] = [
+			{ prefix: '', name: 'All Sets', count: searchTotal }
+		];
+
+		// Sort collections by count (most results first)
+		const sorted = Object.entries(searchCollections)
+			.sort((a, b) => (b[1].total || 0) - (a[1].total || 0));
+
+		for (const [prefix, info] of sorted) {
+			filters.push({
+				prefix,
+				name: info.name || prefix,
+				count: info.total || 0
+			});
+		}
+
+		return filters;
+	});
 
 	// Focus search input when modal opens
 	$effect(() => {
@@ -80,6 +107,7 @@
 		if (!query.trim()) {
 			searchResults = [];
 			searchTotal = 0;
+			searchCollections = {};
 			return;
 		}
 		searchLoading = true;
@@ -92,9 +120,14 @@
 			const data = await res.json();
 			searchResults = data.icons || [];
 			searchTotal = data.total || 0;
+			// Store collections for dynamic filtering (only on unfiltered search)
+			if (!prefix && data.collections) {
+				searchCollections = data.collections;
+			}
 		} catch {
 			searchResults = [];
 			searchTotal = 0;
+			searchCollections = {};
 		}
 		searchLoading = false;
 	}
@@ -364,6 +397,7 @@
 			searchQuery = '';
 			searchResults = [];
 			searchFilter = '';
+			searchCollections = {};
 			return;
 		}
 
@@ -864,6 +898,7 @@
 				searchQuery = '';
 				searchResults = [];
 				searchFilter = '';
+				searchCollections = {};
 			}}
 		></button>
 
@@ -892,15 +927,28 @@
 					{/if}
 				</div>
 				<div class="mt-3 flex items-center gap-3">
-					<!-- Icon set filter -->
-					<select
-						bind:value={searchFilter}
-						class="h-7 px-2 rounded-md bg-zinc-800 border border-zinc-700 text-xs text-zinc-300 focus:outline-none focus:ring-1 focus:ring-zinc-600"
-					>
-						{#each iconSets as set}
-							<option value={set.prefix}>{set.name}</option>
-						{/each}
-					</select>
+					<!-- Icon set filter (dynamic based on search results) -->
+					{#if Object.keys(searchCollections).length > 0}
+						<select
+							bind:value={searchFilter}
+							class="h-7 px-2 rounded-md bg-zinc-800 border border-zinc-700 text-xs text-zinc-300 focus:outline-none focus:ring-1 focus:ring-zinc-600"
+						>
+							{#each availableFilters as filter}
+								<option value={filter.prefix}>
+									{filter.name} ({filter.count})
+								</option>
+							{/each}
+						</select>
+					{:else}
+						<select
+							bind:value={searchFilter}
+							class="h-7 px-2 rounded-md bg-zinc-800 border border-zinc-700 text-xs text-zinc-300 focus:outline-none focus:ring-1 focus:ring-zinc-600"
+						>
+							{#each iconSets as set}
+								<option value={set.prefix}>{set.name}</option>
+							{/each}
+						</select>
+					{/if}
 
 					{#if searchResults.length > 0}
 						<p class="text-xs text-zinc-500">
