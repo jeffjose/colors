@@ -49,7 +49,7 @@
 	// Dynamic filter options based on search results
 	const availableFilters = $derived.by(() => {
 		const filters: { prefix: string; name: string; count: number }[] = [
-			{ prefix: '', name: 'All Sets', count: searchTotal }
+			{ prefix: '', name: 'All Sets', count: searchResults.length }
 		];
 
 		// Sort collections by count (most results first)
@@ -57,15 +57,38 @@
 			.sort((a, b) => (b[1].total || 0) - (a[1].total || 0));
 
 		for (const [prefix, info] of sorted) {
-			filters.push({
-				prefix,
-				name: info.name || prefix,
-				count: info.total || 0
-			});
+			// Count how many results we actually have for this prefix
+			const count = searchResults.filter(icon => icon.startsWith(prefix + ':')).length;
+			if (count > 0) {
+				filters.push({
+					prefix,
+					name: info.name || prefix,
+					count
+				});
+			}
 		}
 
 		return filters;
 	});
+
+	// Client-side filtered results
+	const filteredResults = $derived.by(() => {
+		if (!searchFilter) return searchResults;
+		return searchResults.filter(icon => icon.startsWith(searchFilter + ':'));
+	});
+
+	// Navigate to previous/next filter
+	function prevFilter() {
+		const currentIdx = availableFilters.findIndex(f => f.prefix === searchFilter);
+		const prevIdx = currentIdx <= 0 ? availableFilters.length - 1 : currentIdx - 1;
+		searchFilter = availableFilters[prevIdx].prefix;
+	}
+
+	function nextFilter() {
+		const currentIdx = availableFilters.findIndex(f => f.prefix === searchFilter);
+		const nextIdx = currentIdx >= availableFilters.length - 1 ? 0 : currentIdx + 1;
+		searchFilter = availableFilters[nextIdx].prefix;
+	}
 
 	// Focus search input when modal opens
 	$effect(() => {
@@ -103,7 +126,7 @@
 	});
 
 	// Iconify API functions
-	async function searchIcons(query: string, prefix: string = '') {
+	async function searchIcons(query: string) {
 		if (!query.trim()) {
 			searchResults = [];
 			searchTotal = 0;
@@ -112,18 +135,14 @@
 		}
 		searchLoading = true;
 		try {
-			let url = `https://api.iconify.design/search?query=${encodeURIComponent(query)}&limit=100`;
-			if (prefix) {
-				url += `&prefix=${encodeURIComponent(prefix)}`;
-			}
+			const url = `https://api.iconify.design/search?query=${encodeURIComponent(query)}&limit=100`;
 			const res = await fetch(url);
 			const data = await res.json();
 			searchResults = data.icons || [];
 			searchTotal = data.total || 0;
-			// Store collections for dynamic filtering (only on unfiltered search)
-			if (!prefix && data.collections) {
-				searchCollections = data.collections;
-			}
+			searchCollections = data.collections || {};
+			// Reset filter when new search happens
+			searchFilter = '';
 		} catch {
 			searchResults = [];
 			searchTotal = 0;
@@ -157,15 +176,15 @@
 		}
 	}
 
-	function handleSearchInput(query: string, prefix: string) {
+	function handleSearchInput(query: string) {
 		clearTimeout(searchDebounceTimer);
 		searchDebounceTimer = setTimeout(() => {
-			searchIcons(query, prefix);
+			searchIcons(query);
 		}, 300);
 	}
 
 	$effect(() => {
-		handleSearchInput(searchQuery, searchFilter);
+		handleSearchInput(searchQuery);
 	});
 
 	// Toast state
@@ -929,16 +948,34 @@
 				<div class="mt-3 flex items-center gap-3">
 					<!-- Icon set filter (dynamic based on search results) -->
 					{#if Object.keys(searchCollections).length > 0}
-						<select
-							bind:value={searchFilter}
-							class="h-7 px-2 rounded-md bg-zinc-800 border border-zinc-700 text-xs text-zinc-300 focus:outline-none focus:ring-1 focus:ring-zinc-600"
-						>
-							{#each availableFilters as filter}
-								<option value={filter.prefix}>
-									{filter.name} ({filter.count})
-								</option>
-							{/each}
-						</select>
+						<div class="flex items-center">
+							<button
+								onclick={prevFilter}
+								class="h-7 px-1.5 rounded-l-md bg-zinc-800 border border-zinc-700 text-zinc-400 hover:text-zinc-200 hover:bg-zinc-700 transition-colors"
+							>
+								<svg class="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+									<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7" />
+								</svg>
+							</button>
+							<select
+								bind:value={searchFilter}
+								class="h-7 px-2 bg-zinc-800 border-y border-zinc-700 text-xs text-zinc-300 focus:outline-none"
+							>
+								{#each availableFilters as filter}
+									<option value={filter.prefix}>
+										{filter.name} ({filter.count})
+									</option>
+								{/each}
+							</select>
+							<button
+								onclick={nextFilter}
+								class="h-7 px-1.5 rounded-r-md bg-zinc-800 border border-zinc-700 text-zinc-400 hover:text-zinc-200 hover:bg-zinc-700 transition-colors"
+							>
+								<svg class="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+									<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7" />
+								</svg>
+							</button>
+						</div>
 					{:else}
 						<select
 							bind:value={searchFilter}
@@ -950,9 +987,9 @@
 						</select>
 					{/if}
 
-					{#if searchResults.length > 0}
+					{#if filteredResults.length > 0}
 						<p class="text-xs text-zinc-500">
-							{searchResults.length} of {searchTotal.toLocaleString()}
+							{filteredResults.length}{searchFilter ? ` of ${searchResults.length}` : ''} icons
 						</p>
 					{/if}
 
@@ -978,9 +1015,9 @@
 
 			<!-- Results -->
 			<div class="max-h-[60vh] overflow-y-auto p-4">
-				{#if searchResults.length > 0}
+				{#if filteredResults.length > 0}
 					<div class="grid {searchGridCols} gap-2">
-						{#each searchResults as icon}
+						{#each filteredResults as icon}
 							{@const [prefix, name] = icon.split(':')}
 							<button
 								onclick={() => selectIcon(icon)}
