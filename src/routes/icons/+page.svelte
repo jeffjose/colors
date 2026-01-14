@@ -28,10 +28,40 @@
 	let searchResults = $state<string[]>([]);
 	let searchLoading = $state<boolean>(false);
 	let searchTotal = $state<number>(0);
+	let searchPreviewSize = $state<number>(48);
+	let searchFilter = $state<string>('');
 	let searchDebounceTimer: ReturnType<typeof setTimeout>;
 
+	// Popular icon sets for filtering
+	const iconSets = [
+		{ prefix: '', name: 'All Sets' },
+		{ prefix: 'mdi', name: 'Material Design' },
+		{ prefix: 'lucide', name: 'Lucide' },
+		{ prefix: 'tabler', name: 'Tabler' },
+		{ prefix: 'heroicons', name: 'Heroicons' },
+		{ prefix: 'ph', name: 'Phosphor' },
+		{ prefix: 'ri', name: 'Remix Icon' },
+		{ prefix: 'bi', name: 'Bootstrap' },
+		{ prefix: 'fa6-solid', name: 'Font Awesome' },
+		{ prefix: 'ion', name: 'Ionicons' },
+		{ prefix: 'fluent', name: 'Fluent UI' },
+		{ prefix: 'carbon', name: 'Carbon' },
+		{ prefix: 'octicon', name: 'Octicons' },
+		{ prefix: 'simple-icons', name: 'Simple Icons' },
+		{ prefix: 'logos', name: 'SVG Logos' },
+	];
+
+	// Computed grid columns based on preview size
+	const searchGridCols = $derived.by(() => {
+		if (searchPreviewSize <= 32) return 'grid-cols-8 sm:grid-cols-10 md:grid-cols-12';
+		if (searchPreviewSize <= 48) return 'grid-cols-6 sm:grid-cols-8 md:grid-cols-10';
+		if (searchPreviewSize <= 64) return 'grid-cols-4 sm:grid-cols-6 md:grid-cols-8';
+		if (searchPreviewSize <= 96) return 'grid-cols-3 sm:grid-cols-4 md:grid-cols-6';
+		return 'grid-cols-2 sm:grid-cols-3 md:grid-cols-4';
+	});
+
 	// Iconify API functions
-	async function searchIcons(query: string) {
+	async function searchIcons(query: string, prefix: string = '') {
 		if (!query.trim()) {
 			searchResults = [];
 			searchTotal = 0;
@@ -39,7 +69,11 @@
 		}
 		searchLoading = true;
 		try {
-			const res = await fetch(`https://api.iconify.design/search?query=${encodeURIComponent(query)}&limit=100`);
+			let url = `https://api.iconify.design/search?query=${encodeURIComponent(query)}&limit=100`;
+			if (prefix) {
+				url += `&prefix=${encodeURIComponent(prefix)}`;
+			}
+			const res = await fetch(url);
 			const data = await res.json();
 			searchResults = data.icons || [];
 			searchTotal = data.total || 0;
@@ -75,15 +109,15 @@
 		}
 	}
 
-	function handleSearchInput(query: string) {
+	function handleSearchInput(query: string, prefix: string) {
 		clearTimeout(searchDebounceTimer);
 		searchDebounceTimer = setTimeout(() => {
-			searchIcons(query);
+			searchIcons(query, prefix);
 		}, 300);
 	}
 
 	$effect(() => {
-		handleSearchInput(searchQuery);
+		handleSearchInput(searchQuery, searchFilter);
 	});
 
 	// Toast state
@@ -300,6 +334,7 @@
 			searchOpen = false;
 			searchQuery = '';
 			searchResults = [];
+			searchFilter = '';
 			return;
 		}
 
@@ -774,6 +809,7 @@
 				searchOpen = false;
 				searchQuery = '';
 				searchResults = [];
+				searchFilter = '';
 			}}
 		></button>
 
@@ -801,17 +837,47 @@
 						</div>
 					{/if}
 				</div>
-				{#if searchResults.length > 0}
-					<p class="mt-2 text-xs text-zinc-500">
-						Showing {searchResults.length} of {searchTotal.toLocaleString()} results
-					</p>
-				{/if}
+				<div class="mt-3 flex items-center gap-3">
+					<!-- Icon set filter -->
+					<select
+						bind:value={searchFilter}
+						class="h-7 px-2 rounded-md bg-zinc-800 border border-zinc-700 text-xs text-zinc-300 focus:outline-none focus:ring-1 focus:ring-zinc-600"
+					>
+						{#each iconSets as set}
+							<option value={set.prefix}>{set.name}</option>
+						{/each}
+					</select>
+
+					{#if searchResults.length > 0}
+						<p class="text-xs text-zinc-500">
+							{searchResults.length} of {searchTotal.toLocaleString()}
+						</p>
+					{/if}
+
+					<div class="flex-1"></div>
+
+					<!-- Preview size slider -->
+					<div class="flex items-center gap-2">
+						<svg class="w-3.5 h-3.5 text-zinc-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+							<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 8V4m0 0h4M4 4l5 5m11-1V4m0 0h-4m4 0l-5 5M4 16v4m0 0h4m-4 0l5-5m11 5l-5-5m5 5v-4m0 4h-4" />
+						</svg>
+						<input
+							type="range"
+							bind:value={searchPreviewSize}
+							min="24"
+							max="128"
+							step="8"
+							class="w-24 h-1.5 rounded-full bg-zinc-700 appearance-none cursor-pointer [&::-webkit-slider-thumb]:appearance-none [&::-webkit-slider-thumb]:w-3 [&::-webkit-slider-thumb]:h-3 [&::-webkit-slider-thumb]:rounded-full [&::-webkit-slider-thumb]:bg-zinc-400"
+						/>
+						<span class="text-[10px] text-zinc-500 w-8">{searchPreviewSize}px</span>
+					</div>
+				</div>
 			</div>
 
 			<!-- Results -->
 			<div class="max-h-[60vh] overflow-y-auto p-4">
 				{#if searchResults.length > 0}
-					<div class="grid grid-cols-6 sm:grid-cols-8 md:grid-cols-10 gap-2">
+					<div class="grid {searchGridCols} gap-2">
 						{#each searchResults as icon}
 							{@const [prefix, name] = icon.split(':')}
 							<button
@@ -822,8 +888,8 @@
 								<img
 									src="https://api.iconify.design/{prefix}/{name}.svg"
 									alt={icon}
-									class="w-6 h-6 opacity-80 group-hover:opacity-100 group-hover:scale-110 transition-all"
-									style="filter: invert(1);"
+									class="opacity-80 group-hover:opacity-100 group-hover:scale-110 transition-all"
+									style="filter: invert(1); width: {searchPreviewSize * 0.5}px; height: {searchPreviewSize * 0.5}px;"
 								/>
 							</button>
 						{/each}
