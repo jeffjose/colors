@@ -1,7 +1,7 @@
 <script lang="ts">
 	import { Select } from 'bits-ui';
 	import { copyToClipboard } from '$lib/utils';
-	import { allPalettes, radixPalette, type Palette } from '$lib/palettes';
+	import { allPalettes, radixPalette, tailwindPalette, type Palette } from '$lib/palettes';
 	import {
 		parseSvgContent,
 		applySolidColor,
@@ -187,18 +187,42 @@
 
 	// Preset gradients
 	const presetGradients = [
+		// Warm gradients
 		{ name: 'Sunset', start: '#f97316', end: '#ec4899', angle: 135 },
-		{ name: 'Ocean', start: '#06b6d4', end: '#3b82f6', angle: 135 },
-		{ name: 'Forest', start: '#22c55e', end: '#14b8a6', angle: 135 },
-		{ name: 'Purple Haze', start: '#8b5cf6', end: '#ec4899', angle: 135 },
 		{ name: 'Fire', start: '#ef4444', end: '#f97316', angle: 180 },
-		{ name: 'Ice', start: '#67e8f9', end: '#a5b4fc', angle: 180 },
-		{ name: 'Midnight', start: '#1e3a8a', end: '#7c3aed', angle: 135 },
+		{ name: 'Ember', start: '#dc2626', end: '#7c2d12', angle: 180 },
 		{ name: 'Gold', start: '#fbbf24', end: '#f97316', angle: 135 },
 		{ name: 'Rose', start: '#fb7185', end: '#f472b6', angle: 135 },
-		{ name: 'Lime', start: '#84cc16', end: '#22c55e', angle: 135 },
+		{ name: 'Peach', start: '#fdba74', end: '#f472b6', angle: 135 },
+		// Cool gradients
+		{ name: 'Ocean', start: '#06b6d4', end: '#3b82f6', angle: 135 },
+		{ name: 'Ice', start: '#67e8f9', end: '#a5b4fc', angle: 180 },
 		{ name: 'Sky', start: '#38bdf8', end: '#818cf8', angle: 135 },
-		{ name: 'Ember', start: '#dc2626', end: '#7c2d12', angle: 180 },
+		{ name: 'Midnight', start: '#1e3a8a', end: '#7c3aed', angle: 135 },
+		{ name: 'Arctic', start: '#e0f2fe', end: '#a5f3fc', angle: 135 },
+		{ name: 'Deep Sea', start: '#0369a1', end: '#0f766e', angle: 180 },
+		// Purple/Pink gradients
+		{ name: 'Purple Haze', start: '#8b5cf6', end: '#ec4899', angle: 135 },
+		{ name: 'Lavender', start: '#c4b5fd', end: '#f9a8d4', angle: 135 },
+		{ name: 'Grape', start: '#7c3aed', end: '#4f46e5', angle: 180 },
+		{ name: 'Berry', start: '#a855f7', end: '#ec4899', angle: 135 },
+		{ name: 'Plum', start: '#9333ea', end: '#be185d', angle: 180 },
+		{ name: 'Orchid', start: '#d946ef', end: '#8b5cf6', angle: 135 },
+		// Green gradients
+		{ name: 'Forest', start: '#22c55e', end: '#14b8a6', angle: 135 },
+		{ name: 'Lime', start: '#84cc16', end: '#22c55e', angle: 135 },
+		{ name: 'Mint', start: '#a7f3d0', end: '#67e8f9', angle: 135 },
+		{ name: 'Jungle', start: '#15803d', end: '#0d9488', angle: 180 },
+		{ name: 'Spring', start: '#bef264', end: '#4ade80', angle: 135 },
+		{ name: 'Seaweed', start: '#10b981', end: '#0891b2', angle: 135 },
+		// Monochrome gradients
+		{ name: 'Slate', start: '#64748b', end: '#1e293b', angle: 180 },
+		{ name: 'Silver', start: '#e5e7eb', end: '#6b7280', angle: 180 },
+		{ name: 'Charcoal', start: '#374151', end: '#111827', angle: 180 },
+		// Special combinations
+		{ name: 'Aurora', start: '#22d3ee', end: '#a855f7', angle: 135 },
+		{ name: 'Candy', start: '#f472b6', end: '#fb923c', angle: 135 },
+		{ name: 'Neon', start: '#4ade80', end: '#22d3ee', angle: 135 },
 	];
 
 	function applyPresetGradient(preset: typeof presetGradients[0]) {
@@ -208,6 +232,57 @@
 		gradientType = 'linear';
 		fillMode = 'gradient';
 		showToast(preset.name);
+	}
+
+	// Chromatic color groups (excluding grays) in color wheel order
+	const chromaticGroups = tailwindPalette.groups.filter(g =>
+		!['Slate', 'Gray', 'Zinc', 'Neutral', 'Stone'].includes(g.name)
+	);
+
+	function randomizeGradient() {
+		// Pick a random strategy
+		const strategy = Math.random();
+
+		if (strategy < 0.4) {
+			// Same color group, different shades (always looks good)
+			const group = chromaticGroups[Math.floor(Math.random() * chromaticGroups.length)];
+			const shadeIndices = [2, 3, 4, 5, 6, 7, 8]; // 200-800 range looks best
+			const startIdx = shadeIndices[Math.floor(Math.random() * shadeIndices.length)];
+			let endIdx = shadeIndices[Math.floor(Math.random() * shadeIndices.length)];
+			// Ensure different shades with at least 2 steps apart
+			while (Math.abs(endIdx - startIdx) < 2) {
+				endIdx = shadeIndices[Math.floor(Math.random() * shadeIndices.length)];
+			}
+			gradientStart = group.colors[Math.min(startIdx, endIdx)].hex;
+			gradientEnd = group.colors[Math.max(startIdx, endIdx)].hex;
+			showToast(`${group.name} gradient`);
+		} else if (strategy < 0.8) {
+			// Adjacent color groups (analogous - always harmonious)
+			const groupIdx = Math.floor(Math.random() * chromaticGroups.length);
+			const adjacentOffset = Math.random() < 0.5 ? 1 : -1;
+			const adjacentIdx = (groupIdx + adjacentOffset + chromaticGroups.length) % chromaticGroups.length;
+			const shadeOptions = [4, 5, 6]; // 400-600 look best for cross-color
+			const startShade = shadeOptions[Math.floor(Math.random() * shadeOptions.length)];
+			const endShade = shadeOptions[Math.floor(Math.random() * shadeOptions.length)];
+			gradientStart = chromaticGroups[groupIdx].colors[startShade].hex;
+			gradientEnd = chromaticGroups[adjacentIdx].colors[endShade].hex;
+			showToast(`${chromaticGroups[groupIdx].name} → ${chromaticGroups[adjacentIdx].name}`);
+		} else {
+			// Random preset (curated combinations)
+			const preset = presetGradients[Math.floor(Math.random() * presetGradients.length)];
+			gradientStart = preset.start;
+			gradientEnd = preset.end;
+			gradientAngle = preset.angle;
+			showToast(preset.name);
+			fillMode = 'gradient';
+			return;
+		}
+
+		// Random angle
+		const angles = [135, 180, 45, 90, 0];
+		gradientAngle = angles[Math.floor(Math.random() * angles.length)];
+		gradientType = 'linear';
+		fillMode = 'gradient';
 	}
 
 	function handleQuickColor(hex: string) {
@@ -660,8 +735,18 @@
 								{/each}
 							</div>
 						{:else}
+							<!-- Randomize Button -->
+							<button
+								onclick={randomizeGradient}
+								class="w-full h-7 mb-2 rounded text-[10px] font-medium bg-zinc-700 text-zinc-200 hover:bg-zinc-600 transition-colors flex items-center justify-center gap-1.5"
+							>
+								<svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+									<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15" />
+								</svg>
+								Randomize
+							</button>
 							<!-- Gradient Presets -->
-							<div class="grid grid-cols-3 gap-1">
+							<div class="grid grid-cols-3 gap-1 max-h-48 overflow-y-auto">
 								{#each presetGradients as preset}
 									<button
 										onclick={() => applyPresetGradient(preset)}
