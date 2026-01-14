@@ -355,33 +355,57 @@
 	);
 
 	function randomizeGradient() {
-		// Pick a random strategy
+		// Pick a random strategy with more variety
 		const strategy = Math.random();
+		const numGroups = chromaticGroups.length;
+		const shadeOptions = [3, 4, 5, 6, 7]; // 300-700 look best for cross-color
 
-		if (strategy < 0.4) {
-			// Same color group, different shades (always looks good)
-			const group = chromaticGroups[Math.floor(Math.random() * chromaticGroups.length)];
-			const shadeIndices = [2, 3, 4, 5, 6, 7, 8]; // 200-800 range looks best
+		if (strategy < 0.15) {
+			// Monochromatic - same color group, different shades
+			const group = chromaticGroups[Math.floor(Math.random() * numGroups)];
+			const shadeIndices = [2, 3, 4, 5, 6, 7, 8];
 			const startIdx = shadeIndices[Math.floor(Math.random() * shadeIndices.length)];
 			let endIdx = shadeIndices[Math.floor(Math.random() * shadeIndices.length)];
-			// Ensure different shades with at least 2 steps apart
 			while (Math.abs(endIdx - startIdx) < 2) {
 				endIdx = shadeIndices[Math.floor(Math.random() * shadeIndices.length)];
 			}
 			gradientStart = group.colors[Math.min(startIdx, endIdx)].hex;
 			gradientEnd = group.colors[Math.max(startIdx, endIdx)].hex;
-			showToast(`${group.name} gradient`);
-		} else if (strategy < 0.8) {
-			// Adjacent color groups (analogous - always harmonious)
-			const groupIdx = Math.floor(Math.random() * chromaticGroups.length);
-			const adjacentOffset = Math.random() < 0.5 ? 1 : -1;
-			const adjacentIdx = (groupIdx + adjacentOffset + chromaticGroups.length) % chromaticGroups.length;
-			const shadeOptions = [4, 5, 6]; // 400-600 look best for cross-color
-			const startShade = shadeOptions[Math.floor(Math.random() * shadeOptions.length)];
-			const endShade = shadeOptions[Math.floor(Math.random() * shadeOptions.length)];
-			gradientStart = chromaticGroups[groupIdx].colors[startShade].hex;
-			gradientEnd = chromaticGroups[adjacentIdx].colors[endShade].hex;
+			showToast(`${group.name}`);
+		} else if (strategy < 0.30) {
+			// Analogous - adjacent colors (1-2 steps apart)
+			const groupIdx = Math.floor(Math.random() * numGroups);
+			const offset = Math.random() < 0.5 ? 1 : 2;
+			const direction = Math.random() < 0.5 ? 1 : -1;
+			const adjacentIdx = (groupIdx + offset * direction + numGroups) % numGroups;
+			gradientStart = chromaticGroups[groupIdx].colors[shadeOptions[Math.floor(Math.random() * shadeOptions.length)]].hex;
+			gradientEnd = chromaticGroups[adjacentIdx].colors[shadeOptions[Math.floor(Math.random() * shadeOptions.length)]].hex;
 			showToast(`${chromaticGroups[groupIdx].name} → ${chromaticGroups[adjacentIdx].name}`);
+		} else if (strategy < 0.50) {
+			// Complementary - opposite on color wheel (~8-9 steps in 17-color wheel)
+			const groupIdx = Math.floor(Math.random() * numGroups);
+			const complementaryIdx = (groupIdx + Math.floor(numGroups / 2) + (Math.random() < 0.5 ? 0 : 1)) % numGroups;
+			gradientStart = chromaticGroups[groupIdx].colors[shadeOptions[Math.floor(Math.random() * shadeOptions.length)]].hex;
+			gradientEnd = chromaticGroups[complementaryIdx].colors[shadeOptions[Math.floor(Math.random() * shadeOptions.length)]].hex;
+			showToast(`${chromaticGroups[groupIdx].name} ↔ ${chromaticGroups[complementaryIdx].name}`);
+		} else if (strategy < 0.65) {
+			// Split-complementary - 4-6 steps apart for interesting combinations
+			const groupIdx = Math.floor(Math.random() * numGroups);
+			const offset = 4 + Math.floor(Math.random() * 3); // 4, 5, or 6 steps
+			const direction = Math.random() < 0.5 ? 1 : -1;
+			const splitIdx = (groupIdx + offset * direction + numGroups) % numGroups;
+			gradientStart = chromaticGroups[groupIdx].colors[shadeOptions[Math.floor(Math.random() * shadeOptions.length)]].hex;
+			gradientEnd = chromaticGroups[splitIdx].colors[shadeOptions[Math.floor(Math.random() * shadeOptions.length)]].hex;
+			showToast(`${chromaticGroups[groupIdx].name} → ${chromaticGroups[splitIdx].name}`);
+		} else if (strategy < 0.80) {
+			// Triadic - 1/3 around the wheel (~5-6 steps)
+			const groupIdx = Math.floor(Math.random() * numGroups);
+			const triadicOffset = Math.floor(numGroups / 3);
+			const direction = Math.random() < 0.5 ? 1 : -1;
+			const triadicIdx = (groupIdx + triadicOffset * direction + numGroups) % numGroups;
+			gradientStart = chromaticGroups[groupIdx].colors[shadeOptions[Math.floor(Math.random() * shadeOptions.length)]].hex;
+			gradientEnd = chromaticGroups[triadicIdx].colors[shadeOptions[Math.floor(Math.random() * shadeOptions.length)]].hex;
+			showToast(`${chromaticGroups[groupIdx].name} △ ${chromaticGroups[triadicIdx].name}`);
 		} else {
 			// Random preset (curated combinations)
 			const preset = presetGradients[Math.floor(Math.random() * presetGradients.length)];
