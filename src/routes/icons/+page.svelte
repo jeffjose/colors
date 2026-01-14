@@ -30,7 +30,15 @@
 	let searchTotal = $state<number>(0);
 	let searchPreviewSize = $state<number>(48);
 	let searchFilter = $state<string>('');
+	let searchInputRef = $state<HTMLInputElement | null>(null);
 	let searchDebounceTimer: ReturnType<typeof setTimeout>;
+
+	// Focus search input when modal opens
+	$effect(() => {
+		if (searchOpen && searchInputRef) {
+			searchInputRef.focus();
+		}
+	});
 
 	// Popular icon sets for filtering
 	const iconSets = [
@@ -826,7 +834,7 @@
 						bind:value={searchQuery}
 						placeholder="Search 200,000+ icons from Iconify..."
 						class="w-full h-12 pl-11 pr-4 rounded-lg bg-zinc-800 border border-zinc-700 text-zinc-100 placeholder-zinc-500 text-base focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
-						autofocus
+						bind:this={searchInputRef}
 					/>
 					{#if searchLoading}
 						<div class="absolute right-3 top-1/2 -translate-y-1/2">
